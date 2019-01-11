@@ -1,0 +1,44 @@
+<style lang="css">
+ .dis{
+  display: inline-block;
+ }
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/myorder1',
+      'pages/orderdetails'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    'tabBar': {
+      'list': [
+        {
+          pagePath: 'pages/myorder1',
+          text: '我的订单'
+        },
+        {
+          pagePath: 'pages/orderdetails',
+          text: '订单详情'
+        }
+      ],
+      borderStyle: 'white',
+      color: '#aaa',
+      selectedColor: '#61BFFB',
+      backgroundColor: '#FFF'
+    }
+  }
+  globalData = {
+    userInfo: null
+  }
+}
+</script>

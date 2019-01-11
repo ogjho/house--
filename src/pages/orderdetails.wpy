@@ -1,0 +1,301 @@
+<style lang="css">
+  .orderdetails{
+    background-color: #F3F3F3;
+  }
+  .address{
+    margin-top: 20rpx;
+    height:140rpx;
+    background-color: #FFF;
+  }
+  .address_img{
+    width:50rpx;
+    height:50rpx;
+    margin:45rpx 20rpx 45rpx 22rpx;
+    float: left;
+  }
+  .address_content{
+    font-size: 26rpx;
+    color:#595959;
+    display: inline-block;
+    margin-top: 28rpx;
+  }
+  .address_peoplecontent{
+    margin-bottom: 10rpx;
+  }
+  .address_peoplephone{
+    margin-left: 20rpx;
+  }
+  .address_details{
+    font-size: 24rpx;
+  }
+  .orderlistbackground{
+    background-color: #fff;
+    width: 750rpx;
+  }
+  .orderdetailscontent,.visit{
+    width:750rpx;
+    background-color: #fff;
+  }
+  .details_top,.visit_top{
+    margin:0rpx 30rpx;
+    padding-top:30rpx;
+    border-bottom:1rpx solid #E9E9E9;
+  }
+  .details_content,.barter_content,.details_after,.contentlist{  
+    margin-top: 20rpx; 
+    border-bottom:1rpx solid #E9E9E9;
+  }
+  .details,.contentlist{
+    margin: 20rpx 30rpx 0rpx 30rpx;
+    font-size: 24rpx;
+    color:#595959;
+  }
+  .top_name{
+    font-size: 28rpx;
+    color:#595959;
+    padding-bottom: 20rpx;
+  }
+  .content{
+    margin-bottom: 18rpx;
+  }
+  .barter_courierBox{
+    margin-bottom: 20rpx;
+  }
+  .details_copy{
+    color:#519545;
+    margin-left: 50rpx;
+  }
+  .visit{
+    margin-top:20rpx;
+    padding-bottom: 10rpx;
+    margin-bottom:80rpx;
+  }
+  .nocontent{
+    font-size: 28rpx;
+    color:#9B9B9B;
+    margin:42rpx 0rpx;
+    text-align: center;
+  }
+  .visit_content{
+    margin-top: 10rpx;
+    padding-bottom: 20rpx; 
+    height: 148rpx;
+    overflow: hidden;
+  }
+  .scroll-view-item{
+    height:120rpx;
+    padding-bottom: 20rpx;
+    text-align: center;
+    color: #9B9B9B;
+    font-size: 28rpx;
+    line-height: 120rpx;
+  }
+</style>
+
+<template>
+  <view class="orderdetails">
+    <view class="address">
+      <image class="address_img" src="{{address_img}}"></image>
+      <view class="address_content">
+        <view class="address_peoplecontent">
+          <view class="address_peoplename dis">{{peoplename}}</view>
+          <view class="address_peoplephone dis">{{peoplephone}}</view>
+        </view>
+        <view class="address_details">{{address_details}}</view>
+      </view>
+    </view>
+    <view class="orderdetails_list">
+      <scroll-view scroll-y="true" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{ }}">
+        <view class="orderdetailscontent_list">
+          <view class="orderlistbackground">
+            <orderList :orderlist="orderlist"></orderList>
+          </view>
+          <view class="orderdetailscontent"> 
+            <view class="details_top">
+              <view class="top_name">订单详情</view>
+            </view>
+            <view class="details">
+              <view class="details_content">
+                <view class="content">
+                  <view class="details_numblename dis">{{details_name}}</view>
+                  <view class="details_numble dis">{{details_numble}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_couriername dis">{{details_couriername}}</view>
+                  <view class="details_couriercompany dis">{{details_couriercompany}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_courier dis">{{details_courier}}</view>
+                  <view class="details_couriernumber dis">{{details_couriernumber}}</view>
+                  <view class="details_copy dis">{{details_copy}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_payname dis">{{details_payname}}</view>
+                  <view class="details_paytime dis">{{details_paytime}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_takename dis">{{details_takename}}</view>
+                  <view class="details_taketime dis">{{details_taketime}}</view>
+                </view>
+              </view>
+              <view class="details_after" hidden="{{hidden}}">
+                <view class="content">
+                  <view class="details_aftername dis">{{details_aftername}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_returnname dis">{{details_returnname}}</view>
+                  <view class="details_returnreason dis">{{details_returnreason}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_applyname dis">{{details_applyname}}</view>
+                  <view class="details_applytime dis">{{details_applytime}}</view>
+                </view>
+                <view class="content">
+                  <view class="details_moneyname dis">{{details_moneyname}}</view>
+                  <view class="details_returnmomey dis">¥ {{details_returnmomey}}</view>
+                </view>
+                <view class="content">
+                  <view class="after_couriername dis">{{after_couriername}}</view>
+                  <view class="after_couriercompany dis">{{after_couriercompany}}</view>
+                </view>
+                <view class="content">
+                  <view class="after_courier dis">{{after_courier}}</view>
+                  <view class="after_couriernumber dis">{{after_couriernumber}}</view>
+                  <view class="details_copy dis">{{details_copy}}</view>
+                </view>
+              </view>
+              <view class="barter_content" hidden="{{hidden}}">
+                <view class="content">
+                  <view class="barter_name">{{barter_name}}</view>
+                </view>
+                <view class="content">
+                  <view class="barter_couriername dis">{{barter_couriername}}</view>
+                  <view class="barter_couriercompany dis">{{barter_couriercompany}}</view>
+                </view>
+                <view class="content barter_courierBox">
+                  <view class="barter_courier dis">{{barter_courier}}</view>
+                  <view class="barter_couriernumber dis">{{barters_couriernumber}}</view>
+                  <view class="details_copy dis">{{details_copy}}</view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="visit"> 
+            <view class="visit_top">
+              <view class="top_name">回访记录</view>
+            </view>
+            <view class="nocontent" hidden="{{this.contentlist.length == 0 ? true : false}}">暂无回访记录</view>
+            <view class="visitcontent" hidden="{{this.contentlist.length > 0 ? false : true}}">
+              <block wx:for="{{contentlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+                <view class="contentlist">
+                  <view class="visit_time">{{item.visit_time}}</view>
+                  <view class="visit_content">{{item.visit_content}}</view>
+                </view>
+              </block>
+            </view>
+          </view>
+          <view class="scroll-view-item" hidden="{{hidden}}">——别拉了，没数据了——</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+  <overlays hidden=false></overlays>
+</template>
+
+<script>
+import wepy from 'wepy'
+import orderList from '../components/orderList'
+import overlays from '../components/overlays'
+
+export default class orderdetails extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单详情'
+  }
+  components = {
+    orderList: orderList,
+    overlays: overlays
+  }
+  data = {
+    hidden: true,
+    address_img: '../images/place.png',
+    peoplename: '李先生',
+    peoplephone: '12312312312',
+    address_details: '广东省佛山市顺德区容桂街道顺德科技创新中心4座1101',
+    details_name: '订单号：',
+    details_numble: '12121212121212121212',
+    details_couriername: '快递公司：',
+    details_couriercompany: '中通快递',
+    details_courier: '快递单号：',
+    details_couriernumber: '123123123123',
+    details_copy: '复制',
+    details_payname: '付款时间：',
+    details_paytime: '2018-11-23 14:17',
+    details_takename: '确认收货时间：',
+    details_taketime: '--',
+    /* 2018-11-24 14:17
+    details_aftername: '退换货（买家发货）：',
+    details_returnname: '退换货原因：',
+    details_returnreason: '质量问题',
+    details_applyname: '申請時間：',
+    details_applytime: '2018-11-25 14:17',
+    details_moneyname: '退款金額：',
+    details_returnmomey: '24000.00',
+    after_couriername: '快递公司：',
+    after_couriercompany: '中通快递',
+    after_courier: '快递单号：',
+    after_couriernumber: '123123123123',
+    barter_name: '换货（卖家发货）：',
+    barter_couriername: '快递公司：',
+    barter_couriercompany: '中通快递',
+    barter_courier: '快递单号：',
+    barters_couriernumber: '123123123123', */
+    orderlist: [
+      {
+        id: '0',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待收货',
+        list: [
+          {
+            id: '0.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          },
+          {
+            id: '0.2',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }],
+        good_totalPrices: '24000.00'
+      }
+    ],
+    contentlist: [
+      {
+        id: '0',
+        visit_time: '2018-12-03 14:17',
+        visit_content: '今天已在客户家中安装产品啊就是大叫啊靠已完成，客户对我们的服务态度非常满意，以及我们的安装技术得到客户的认可，客户也非常满意我司的产品，以及认可我司产品的质量，推荐身边的朋友购买。按丢俺滴哦哈斯哦带。'
+      },
+      {
+        id: '1',
+        visit_time: '2018-12-03 14:17',
+        visit_content: '今天已在客户家中安装产品啊就是大叫啊靠已完成，客户对我们的服务态度非常满意，以及我们的安装技术得到客户的认可，客户也非常满意我司的产品，以及认可我司产品的质量，推荐身边的朋友购买。按丢俺滴哦哈斯哦带。'
+      },
+      {
+        id: '2',
+        visit_time: '2018-12-03 14:17',
+        visit_content: '今天已在客户家中安装产品啊就是大叫啊靠已完成，客户对我们的服务态度非常满意，以及我们的安装技术得到客户的认可，客户也非常满意我司的产品，以及认可我司产品的质量，推荐身边的朋友购买。按丢俺滴哦哈斯哦带。'
+      }
+    ]
+  }
+}
+</script>

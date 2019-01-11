@@ -1,0 +1,542 @@
+<style lang="css">
+  /*切换栏*/
+  .swiper-tab{
+    background: #fff;
+    color: #333;
+    display: flex;
+    position: relative;
+    z-index: 2;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0rpx 0rpx 4rpx 0 #000;
+    width: 100%;
+    height: 88rpx;
+    line-height: 88rpx;
+  }
+  .swiper-tab-list{
+    margin: 0 44rpx;
+    font-size: 28rpx;
+  }
+  .change{
+    display: inline-block;
+    height: 100%;
+  }
+  .changed{
+    color: #BC2020;
+    border-bottom:4rpx solid #BC2020;  
+    display: inline-block;
+    height: 100%;
+  }
+  .scroll-view-item{
+    height:80rpx;
+    padding-bottom: 20rpx;
+    text-align: center;
+    color: #9B9B9B;
+    font-size: 28rpx;
+    line-height: 80rpx;
+  }
+  .order{
+  margin:20rpx 10rpx 20rpx 10rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  }
+  .order_top{
+    margin: 0rpx 30rpx;
+    padding-top:20rpx;
+    padding-bottom:10rpx;
+    border-bottom:1rpx solid #E9E9E9;
+    height:54rpx;
+  }
+  .shop_img{
+    width:54rpx;
+    height:54rpx;
+    float: left;
+  }
+  .shop_name{
+    font-size: 28rpx;
+    color:#595959;
+    display: inline-block;
+    margin-left: 10rpx;
+    line-height: 54rpx;
+  }
+  .order_state{
+    font-size: 26rpx;
+    color:#DD6549;
+    float: right;
+    line-height: 54rpx;
+  }
+  .goods{
+    margin:20rpx 30rpx 0rpx 30rpx;
+    padding-bottom: 20rpx;
+    border-bottom:1rpx solid #E9E9E9;
+  }
+  .good_img{
+    width: 160rpx;
+    height: 160rpx;
+    float: left;
+  }
+  .good_content{
+    margin-left: 22rpx;
+    display: inline-block;
+    width:468rpx;
+  }
+  .good_name{
+    font-size: 26rpx;
+    color:#333;
+    width:298rpx;
+    display: inline-block;
+  }
+  .good_price{
+    font-size: 28rpx;
+    color:#BC2020;
+    overflow: hidden;
+    float: right;
+  }
+  .good_size{
+    margin:10rpx 0rpx 10rpx 0rpx;
+    height:36rpx;
+    line-height: 36rpx;
+    color:#9B9B9B;
+    font-size: 24rpx;
+  }
+  .good_sizename{
+    margin-right: 104rpx;
+  }
+  .good_sizename,.good_num{
+    display:inline-block;
+  }
+  .good_afterstate{
+    font-size: 26rpx;
+    color:#DD6549;
+    float: right;
+  }
+  .good_afterdays{
+    font-size: 24rpx;
+    color: #DD6549;
+  }
+  .totalPrices{
+    text-align: right;
+    padding:18rpx 30rpx 18rpx 0rpx;
+  }
+  .good_totalPricesname{
+    font-size: 28rpx;
+    color: #555;
+    margin-right: 4rpx;
+    display: inline-block;
+    line-height: 25rpx;
+  }
+  .good_totalPrices{
+    display: inline-block;
+    font-size: 32rpx;
+    color: #BC2020;
+    overflow: hidden;
+  }
+</style>
+
+<template>
+  <!-- 切换栏 -->
+  <view class="swiper-tab">
+    <block wx:for="{{menulist}}" wx:key="sptab">
+      <view class="swiper-tab-list {{currtab == item.index ? 'changed' : 'change'}}" data-current="{{item.index}}" @tap="tabSwitch">{{item.name}}</view>
+    </block>
+  </view>
+  <swiper current="{{currtab}}" bindchange="tabChange" style="height:{{deviceH-31}}px">
+    <!-- 全部 -->
+    <swiper-item>
+      <scroll-view>
+        <block wx:for="{{orderlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <view class="order">
+            <view class="order_top">
+              <image src="{{item.shop_img}}" class="shop_img"></image>
+              <view class="shop_name">{{item.shop_name}}</view>
+              <view class="order_state">{{item.order_state}}</view>
+            </view>
+            <view @tap="go">
+              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                <image src="{{list.good_img}}" class="good_img"></image>
+                <view class="good_content">
+                  <view class="good_name">{{list.good_name}}</view>
+                  <view class="good_price">¥ {{list.good_price}}</view>
+                  <view class="good_size">
+                    <view class="good_sizename">{{list.good_sizename}}</view>
+                    <view class="good_num">X {{list.good_num}}</view>
+                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+                  </view>
+                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                </view>
+              </view>
+            </view>
+            <view class="totalPrices">
+              <view class="good_totalPricesname">合计：
+                <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </swiper-item>
+    <!-- 待发货 -->
+    <swiper-item>
+      <scroll-view>
+        <block wx:for="{{waitsendlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <view class="order">
+            <view class="order_top">
+              <image src="{{item.shop_img}}" class="shop_img"></image>
+              <view class="shop_name">{{item.shop_name}}</view>
+              <view class="order_state">{{item.order_state}}</view>
+            </view>
+            <view>
+              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                <image src="{{list.good_img}}" class="good_img"></image>
+                <view class="good_content">
+                  <view class="good_name">{{list.good_name}}</view>
+                  <view class="good_price">¥ {{list.good_price}}</view>
+                  <view class="good_size">
+                    <view class="good_sizename">{{list.good_sizename}}</view>
+                    <view class="good_num">X {{list.good_num}}</view>
+                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+                  </view>
+                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                </view>
+              </view>
+            </view>
+            <view class="totalPrices">
+              <view class="good_totalPricesname">合计：
+                <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </swiper-item>
+    <!-- 待收货 -->
+    <swiper-item>
+      <scroll-view>
+        <block wx:for="{{waittakelist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <view class="order">
+            <view class="order_top">
+              <image src="{{item.shop_img}}" class="shop_img"></image>
+              <view class="shop_name">{{item.shop_name}}</view>
+              <view class="order_state">{{item.order_state}}</view>
+            </view>
+            <view>
+              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                <image src="{{list.good_img}}" class="good_img"></image>
+                <view class="good_content">
+                  <view class="good_name">{{list.good_name}}</view>
+                  <view class="good_price">¥ {{list.good_price}}</view>
+                  <view class="good_size">
+                    <view class="good_sizename">{{list.good_sizename}}</view>
+                    <view class="good_num">X {{list.good_num}}</view>
+                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+                  </view>
+                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                </view>
+              </view>
+            </view>
+            <view class="totalPrices">
+              <view class="good_totalPricesname">合计：
+                <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </swiper-item>
+    <!-- 已完成 -->
+    <swiper-item>
+      <scroll-view>
+        <block wx:for="{{finishlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <view class="order">
+            <view class="order_top">
+              <image src="{{item.shop_img}}" class="shop_img"></image>
+              <view class="shop_name">{{item.shop_name}}</view>
+              <view class="order_state">{{item.order_state}}</view>
+            </view>
+            <view>
+              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                <image src="{{list.good_img}}" class="good_img"></image>
+                <view class="good_content">
+                  <view class="good_name">{{list.good_name}}</view>
+                  <view class="good_price">¥ {{list.good_price}}</view>
+                  <view class="good_size">
+                    <view class="good_sizename">{{list.good_sizename}}</view>
+                    <view class="good_num">X {{list.good_num}}</view>
+                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+                  </view>
+                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                </view>
+              </view>
+            </view>
+            <view class="totalPrices">
+              <view class="good_totalPricesname">合计：
+                <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class myorder extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的订单'
+  }
+  data = {
+    currtab: 0,
+    menulist: [
+      {
+        name: '全部',
+        index: 0
+      },
+      {
+        name: '待发货',
+        index: 1
+      },
+      {
+        name: '待收货',
+        index: 2
+      },
+      {
+        name: '已完成',
+        index: 3
+      }
+    ],
+    orderlist: [],
+    waitsendlist: [],
+    waittakelist: [],
+    finishlist: [],
+    deviceH: 0
+  }
+  onLoad() {
+    console.log(this.orderlist)
+  }
+  onReady() {
+    // 页面渲染完成
+    this.getDeviceInfo()
+    this.orderShow()
+  }
+  getDeviceInfo() {
+    wx.getSystemInfo({
+      success: function (res) {
+        this.deviceH = res.windowHeight
+      }
+    })
+  }
+  tabSwitch(e) {
+    if (this.currtab === e.target.dataset.current) {
+      return false
+    } else {
+      this.currtab = e.target.dataset.current
+    }
+  }
+  tabChange(e) {
+    this.currtab = e.detail.current
+    this.orderShow()
+  }
+  orderShow() {
+    switch (this.data.currtab) {
+      case 0:
+        this.orderlistShow()
+        break
+      case 1:
+        this.waitsendlistShow()
+        break
+      case 2:
+        this.waittakelistShow()
+        break
+      case 3:
+        this.finishlistShow()
+        break
+    }
+  }
+  orderlistShow() {
+    this.orderlist = [
+      {
+        id: '0',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待发货',
+        list: [
+          {
+            id: '0.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
+      },
+      {
+        id: '1',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待收货',
+        list: [
+          {
+            id: '1.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
+      },
+      {
+        id: '2',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '已完成',
+        list: [
+          {
+            id: '2.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          },
+          {
+            id: '2.2',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }],
+        good_totalPrices: '24000.00'
+      },
+      {
+        id: '3',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '已完成',
+        list: [{
+          id: '3.1',
+          good_img: '../images/goods.jpg',
+          good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+          good_price: '12000.00',
+          good_sizename: '银色',
+          good_num: '1',
+          good_afterstate: '退货中',
+          good_afterdays: '15'
+        }],
+        good_totalPrices: '12000.00'
+      }
+    ]
+  }
+  waitsendlistShow() {
+    this.waitsendlist = [
+      {
+        id: '0',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待发货',
+        list: [
+          {
+            id: '0.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
+      }
+    ]
+  }
+  waittakelistShow() {
+    this.waittakelist = [
+      {
+        id: '0',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待收货',
+        list: [
+          {
+            id: '0.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
+      }
+    ]
+  }
+  finishlistShow() {
+    this.finishlist = [
+      {
+        id: '0',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '已完成',
+        list: [
+          {
+            id: '0.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          },
+          {
+            id: '0.2',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }],
+        good_totalPrices: '24000.00'
+      },
+      {
+        id: '1',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '已完成',
+        list: [{
+          id: '1.1',
+          good_img: '../images/goods.jpg',
+          good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+          good_price: '12000.00',
+          good_sizename: '银色',
+          good_num: '1',
+          good_afterstate: '退货中',
+          good_afterdays: '15'
+        }],
+        good_totalPrices: '12000.00'
+      }
+    ]
+  }
+}
+</script>

@@ -1,0 +1,61 @@
+<style lang="css">
+
+</style>
+
+<template>
+  <view class="orderdetailscontent"> 
+    <view class="details_top">
+      <view class="top_name">订单详情</view>
+    </view>
+      <view class="details">
+        <block wx:for="{{contentlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <view class="details_content">
+            <view class="content">
+              <view class="details_numblename">{{details_name}}</view>
+              <view class="details_numble">{{item.details_numble}}</view>
+            </view>
+            <view class="content">
+              <view class="details_couriername">{{details_couriername}}</view>
+              <view class="details_couriernumber">{{item.details_couriernumber}}</view>
+              <view class="details_copy">{{details_copy}}</view>
+            </view>
+            <view class="content">
+              <view class="details_payname">{{details_payname}}</view>
+              <view class="details_paytime">{{item.details_paytime}}</view>
+            </view>
+            <view class="content">
+              <view class="details_payname">{{details_payname}}</view>
+              <view class="details_paytime">{{item.details_paytime}}</view>
+            </view>
+            <view class="content">
+              <view class="details_takename">{{details_takename}}</view>
+              <view class="details_taketime">{{item.details_taketime}}</view>
+            </view>
+            <view class="details_after">
+              <view class="content">
+                <view class="details_returnname">{{details_returnname}}</view>
+                <view class="details_returnreason">{{item.details_returnreason}}</view>
+              </view>
+              <view class="content">
+                <view class="details_applyname">{{details_applyname}}</view>
+                <view class="details_applytime">{{item.details_applytime}}</view>
+              </view>
+              <view class="content">
+                <view class="details_moneyname">{{details_moneyname}}</view>
+                <view class="details_returnmomey">¥ {{item.details_returnmomey}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class orderdetailscontent extends wepy.component {
+    props = {
+      contentlist: {}
+    }
+  }
+</script>
