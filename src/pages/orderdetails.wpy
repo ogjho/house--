@@ -32,6 +32,125 @@
     background-color: #fff;
     width: 750rpx;
   }
+    .order{
+    margin:20rpx 10rpx 20rpx 10rpx;
+    background-color: #fff;
+    border-radius: 10rpx;
+  }
+  .order_top{
+    margin: 0rpx 30rpx;
+    padding-top:20rpx;
+    padding-bottom:10rpx;
+    border-bottom:1rpx solid #E9E9E9;
+    height:54rpx;
+  }
+  .shop_img{
+    width:54rpx;
+    height:54rpx;
+    float: left;
+  }
+  .shop_name{
+    font-size: 28rpx;
+    color:#595959;
+    display: inline-block;
+    margin-left: 10rpx;
+    line-height: 54rpx;
+  }
+  .order_state{
+    font-size: 26rpx;
+    color:#DD6549;
+    float: right;
+    line-height: 54rpx;
+  }
+  .goods{
+    margin:20rpx 30rpx 0rpx 30rpx;
+    padding-bottom: 20rpx;
+    border-bottom:1rpx solid #E9E9E9;
+  }
+  .good_img{
+    width: 160rpx;
+    height: 160rpx;
+    float: left;
+  }
+  .good_content{
+    margin-left: 22rpx;
+    display: inline-block;
+    width:468rpx;
+  }
+  .good_name{
+    font-size: 26rpx;
+    color:#333;
+    width:298rpx;
+    display: inline-block;
+  }
+  .good_price{
+    font-size: 28rpx;
+    color:#BC2020;
+    overflow: hidden;
+    float: right;
+  }
+  .good_size{
+    margin:10rpx 0rpx 10rpx 0rpx;
+    height:36rpx;
+    line-height: 36rpx;
+    color:#9B9B9B;
+    font-size: 24rpx;
+  }
+  .good_sizename{
+    margin-right: 104rpx;
+  }
+  .good_sizename,.good_num{
+    display:inline-block;
+  }
+  .good_afterstate{
+    font-size: 26rpx;
+    color:#DD6549;
+    float: right;
+  }
+  .aftersale{
+    font-size: 26rpx;
+    color:#DD6549;
+    float: right;
+    border:1rpx solid #DD6549;
+    border-radius: 20rpx;
+    height:45rpx;
+    width:150rpx;
+    text-align: center;
+    line-height: 45rpx;
+  }
+  .good_afterdays{
+    font-size: 24rpx;
+    color: #DD6549;
+    display: inline-block;
+  }
+  .totalPrices{
+    margin:0rpx 30rpx;
+    padding:18rpx 0rpx;
+  }
+  .good_totalPricesname{
+    font-size: 28rpx;
+    color: #555;
+    margin-right: 4rpx;
+    display: inline-block;
+    line-height: 60rpx;
+    float: right;
+  }
+  .good_totalPrices{
+    display: inline-block;
+    font-size: 32rpx;
+    color: #BC2020;
+  }
+  .suretaken{
+    font-size: 28rpx;
+    color:#DD6549;
+    height:60rpx;
+    width:180rpx;
+    border-radius: 20rpx;
+    border:1rpx solid #DD6549;
+    text-align: center;
+    line-height: 60rpx;
+    display: inline-block;
+  }
   .orderdetailscontent,.visit{
     width:750rpx;
     background-color: #fff;
@@ -90,6 +209,106 @@
     font-size: 28rpx;
     line-height: 120rpx;
   }
+    .overlays{
+    background-color: rgba(0,0,0,.6);
+    position: fixed;
+    top: 0;
+    right:0;
+    left:0;
+    bottom:0;
+    z-index: 2;
+  }
+  .overlaysBox{
+    background-color: #fff;
+    width:560rpx;
+    height:420rpx;
+    position: fixed;
+    top: 350rpx;
+    right:95rpx;
+    left:95rpx;
+    bottom:350rpx;
+    z-index: 4;
+    border-radius: 10rpx;
+    text-align: center;
+  }
+  .del{
+    width:40rpx;
+    height:40rpx;
+    position: fixed;
+    top: 309rpx;
+    right:70rpx;
+    left:640rpx;
+    bottom:857rpx;
+    z-index: 4;
+    padding:10rpx;
+  }
+  .title_name{
+    font-size: 36rpx;
+    color:#333;
+    margin:40rpx auto;
+    margin-bottom: 30rpx;
+  }
+  .after_return,.after_exchange{
+    font-size: 30rpx;
+    color:#BC2020;
+    width:136rpx;
+    padding:20rpx 82rpx;
+    height:40rpx;
+    border:1rpx solid #BC2020;
+    border-radius: 10rpx;
+    line-height: 40rpx;
+    margin:0rpx auto;
+    margin-bottom: 50rpx;
+  }
+  .after_title{
+    font-size: 30rpx;
+    color:#333;
+  }
+  .after_returnmoney{
+    font-size: 30rpx;
+    color:#BC2020;
+  }
+  .applyreturnBox{
+    text-align: left;
+    height:666rpx;
+    top: 250rpx;
+  }
+  .del2{
+    top: 208rpx;
+  }
+  .title_name{
+    text-align: center;
+  }
+  .after_returnBox{
+    margin-left: 50rpx;
+    margin-bottom: 30rpx;
+    margin-right: 50rpx;
+  }
+  .after_returnreason{
+    border:1rpx solid #979797;
+    margin-top: 20rpx;
+    height:260rpx;
+    margin-bottom: 40rpx;
+    font-size: 25rpx;
+    line-height: 40rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+  .applybutton{
+    width:280rpx;
+    height:70rpx;
+    border:1rpx solid #BC2020;
+    font-size: 30rpx;
+    color:#BC2020; 
+    border-radius: 10rpx;
+    text-align: center;
+    margin:0rpx auto;
+    line-height: 70rpx;
+  }
+  .after_exchangeBox{
+    height:600rpx;
+  }
 </style>
 
 <template>
@@ -108,7 +327,36 @@
       <scroll-view scroll-y="true" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{ }}">
         <view class="orderdetailscontent_list">
           <view class="orderlistbackground">
-            <orderList :orderlist="orderlist"></orderList>
+            <block wx:for="{{orderlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+            <view class="order">
+              <view class="order_top">
+                <image src="{{item.shop_img}}" class="shop_img"></image>
+                <view class="shop_name">{{item.shop_name}}</view>
+                <view class="order_state">{{item.order_state}}</view>
+              </view>
+              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                <image src="{{list.good_img}}" class="good_img"></image>
+                <view class="good_content">
+                  <view class="good_name">{{list.good_name}}</view>
+                  <view class="good_price">¥ {{list.good_price}}</view>
+                  <view class="good_size">
+                    <view class="good_sizename">{{list.good_sizename}}</view>
+                    <view class="good_num">X {{list.good_num}}</view>
+                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+                  </view>
+                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                  <view class="aftersale" @tap="afterapply">退换货</view>
+                </view>
+              </view>
+              <view class="totalPrices">
+                <view class="suretaken">确认收货</view>
+                <view class="good_totalPricesname">合计：
+                  <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+                </view>
+              </view>
+            </view>
+          </block>
+            <!-- <orderList :orderlist="orderlist"></orderList> -->
           </view>
           <view class="orderdetailscontent"> 
             <view class="details_top">
@@ -138,7 +386,7 @@
                   <view class="details_taketime dis">{{details_taketime}}</view>
                 </view>
               </view>
-              <view class="details_after" hidden="{{hidden}}">
+              <view class="details_after" hidden="false">
                 <view class="content">
                   <view class="details_aftername dis">{{details_aftername}}</view>
                 </view>
@@ -164,7 +412,7 @@
                   <view class="details_copy dis">{{details_copy}}</view>
                 </view>
               </view>
-              <view class="barter_content" hidden="{{hidden}}">
+              <view class="barter_content" hidden="false">
                 <view class="content">
                   <view class="barter_name">{{barter_name}}</view>
                 </view>
@@ -184,8 +432,8 @@
             <view class="visit_top">
               <view class="top_name">回访记录</view>
             </view>
-            <view class="nocontent" hidden="{{this.contentlist.length == 0 ? true : false}}">暂无回访记录</view>
-            <view class="visitcontent" hidden="{{this.contentlist.length > 0 ? false : true}}">
+            <view class="nocontent" hidden="{{this.contentlist.length == 0 ? false : true}}">暂无回访记录</view>
+            <view class="visitcontent" hidden="{{this.contentlist.length != 0 ? false : true}}">
               <block wx:for="{{contentlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
                 <view class="contentlist">
                   <view class="visit_time">{{item.visit_time}}</view>
@@ -199,24 +447,49 @@
       </scroll-view>
     </view>
   </view>
-  <overlays hidden=false></overlays>
+  <view class="overlays" hidden="{{hidden}}" @tap="afterapply">
+    <view class="overlaysBox" hidden="{{afterchange}}">
+      <image src="{{del_img}}" class="del"></image>
+      <view class="title_name">{{title_name}}</view>
+      <view class="after_return" @tap="afterreturn">{{after_return}}</view>
+      <view class="after_exchange" @tap="afterexchange">{{after_exchange}}</view>   
+    </view>
+    <view class="applyreturnBox overlaysBox" hidden="false">
+      <image src="{{del_img}}" class="del2 del"></image>
+      <view class="title_name">{{after_return}}</view>
+      <view class="after_returnBox">
+        <view class="after_title dis">{{after_returnmoneytitle}}</view>
+        <view class="after_returnmoney dis">¥ {{after_returnmoney}}</view>
+      </view> 
+      <view class="after_returnBox">
+        <view class="after_title">{{after_returnreasontitle}}</view>
+        <view class="after_returnreason">{{after_returnreason}}</view>
+      </view>
+      <view class="applybutton">{{applybutton}}</view>  
+    </view>
+    <view class="after_exchangeBox overlaysBox applyreturnBox" hidden="false">
+      <image src="{{del_img}}" class="del2 del"></image>
+      <view class="title_name">{{after_exchange}}</view>
+      <view class="after_returnBox">
+        <view class="after_title">{{after_exchangetitle}}</view>
+        <view class="after_returnreason">{{after_exchangereason}}</view>
+      </view>
+      <view class="applybutton">{{applybutton}}</view>  
+    </view>
+  </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import orderList from '../components/orderList'
-import overlays from '../components/overlays'
 
 export default class orderdetails extends wepy.page {
   config = {
     navigationBarTitleText: '订单详情'
   }
-  components = {
-    orderList: orderList,
-    overlays: overlays
-  }
   data = {
-    hidden: true,
+    afterchange: false,
+    after: '',
+    hidden: false,
     address_img: '../images/place.png',
     peoplename: '李先生',
     peoplephone: '12312312312',
@@ -254,7 +527,7 @@ export default class orderdetails extends wepy.page {
         id: '0',
         shop_img: '../images/shop.png',
         shop_name: '简家之域商城',
-        order_state: '待收货',
+        order_state: '已完成',
         list: [
           {
             id: '0.1',
@@ -280,7 +553,7 @@ export default class orderdetails extends wepy.page {
       }
     ],
     contentlist: [
-      {
+      /* {
         id: '0',
         visit_time: '2018-12-03 14:17',
         visit_content: '今天已在客户家中安装产品啊就是大叫啊靠已完成，客户对我们的服务态度非常满意，以及我们的安装技术得到客户的认可，客户也非常满意我司的产品，以及认可我司产品的质量，推荐身边的朋友购买。按丢俺滴哦哈斯哦带。'
@@ -294,8 +567,27 @@ export default class orderdetails extends wepy.page {
         id: '2',
         visit_time: '2018-12-03 14:17',
         visit_content: '今天已在客户家中安装产品啊就是大叫啊靠已完成，客户对我们的服务态度非常满意，以及我们的安装技术得到客户的认可，客户也非常满意我司的产品，以及认可我司产品的质量，推荐身边的朋友购买。按丢俺滴哦哈斯哦带。'
-      }
-    ]
+      } */
+    ],
+    del_img: '../images/delete.png',
+    title_name: '选择服务类型',
+    after_return: '退货退款',
+    after_exchange: '换 货',
+    after_returnmoneytitle: '退款金额：',
+    after_returnmoney: '24000.00',
+    after_returnreasontitle: '请填写退货原因：',
+    after_returnreason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺啊哈三对啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺',
+    applybutton: '提交申请',
+    after_exchangetitle: '请填写换货原因：',
+    after_exchangereason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺'
+  }
+  methods = {
+    afterapply() {
+      this.hidden = !this.hidden
+    },
+    afterreturn() {
+      this.afterchange = !this.afterchange
+    }
   }
 }
 </script>

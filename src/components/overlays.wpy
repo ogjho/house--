@@ -1,23 +1,12 @@
 <style lang="css">
   .overlays{
+    background-color: rgba(0,0,0,.6);
     position: fixed;
     top: 0;
     right:0;
     left:0;
     bottom:0;
     z-index: 2;
-  }
-  .background{
-    background-color: #000;
-    opacity:0.6;
-    width:100%;
-    height:100%;
-    position: fixed;
-    top: 0;
-    right:0;
-    left:0;
-    bottom:0;
-    z-index: 3;
   }
   .overlaysBox{
     background-color: #fff;
@@ -41,6 +30,7 @@
     left:640rpx;
     bottom:857rpx;
     z-index: 4;
+    padding:5rpx;
   }
   .title_name{
     font-size: 36rpx;
@@ -86,27 +76,25 @@
   }
   .after_returnreason{
     border:1rpx solid #979797;
-    margin-top: 30rpx;
-    height:220rpx;
-    margin-bottom: 50rpx;
+    margin-top: 20rpx;
+    height:260rpx;
+    margin-bottom: 40rpx;
     font-size: 25rpx;
     line-height: 40rpx;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp:10; 
   }
   .applybutton{
-    width:300rpx;
-    height:80rpx;
+    width:280rpx;
+    height:70rpx;
     border:1rpx solid #BC2020;
     font-size: 30rpx;
     color:#BC2020; 
     border-radius: 10rpx;
     text-align: center;
     margin:0rpx auto;
-    line-height: 80rpx;
+    line-height: 70rpx;
   }
   .after_exchangeBox{
     height:600rpx;
@@ -114,15 +102,14 @@
 </style>
 
 <template>
-  <view class="overlays">
-    <view class="background"></view>
-    <view class="overlaysBox" hidden="false">
+  <view class="overlays" hidden="{{hidden}}" @tap="afterapply">
+    <view class="overlaysBox">
       <image src="{{del_img}}" class="del"></image>
       <view class="title_name">{{title_name}}</view>
       <view class="after_return">{{after_return}}</view>
       <view class="after_exchange">{{after_exchange}}</view>   
     </view>
-    <view class="applyreturnBox overlaysBox">
+    <view class="applyreturnBox overlaysBox" hidden="false">
       <image src="{{del_img}}" class="del2 del"></image>
       <view class="title_name">{{after_return}}</view>
       <view class="after_returnBox">
@@ -152,6 +139,7 @@ import wepy from 'wepy'
 
 export default class overlays extends wepy.component {
   data = {
+    hidden: true,
     del_img: '../images/delete.png',
     title_name: '选择服务类型',
     after_return: '退货退款',
@@ -159,10 +147,16 @@ export default class overlays extends wepy.component {
     after_returnmoneytitle: '退款金额：',
     after_returnmoney: '24000.00',
     after_returnreasontitle: '请填写退货原因：',
-    after_returnreason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺 啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺 啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺',
+    after_returnreason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺啊哈三对啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺',
     applybutton: '提交申请',
     after_exchangetitle: '请填写换货原因：',
     after_exchangereason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺'
+  }
+  methods = {
+    afterapply() {
+      console.log(1)
+      this.hidden = !this.hidden
+    }
   }
 }
 </script>

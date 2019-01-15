@@ -1,0 +1,41 @@
+<style lang="css">
+.order_top {
+    margin: 0rpx 30rpx;
+    padding-top: 20rpx;
+    padding-bottom: 10rpx;
+    border-bottom: 1rpx solid #E9E9E9;
+    height: 54rpx;
+}
+
+.shop_img {
+    width: 54rpx;
+    height: 54rpx;
+    float: left;
+}
+
+.shop_name {
+    font-size: 28rpx;
+    color: #595959;
+    display: inline-block;
+    margin-left: 10rpx;
+    line-height: 54rpx;
+}
+</style>
+<template>
+  <view class="shopTop">
+    <image src="{{shop.shop_img}}" class="shop_img"></image>
+    <view class="shop_name">{{shop.shop_name}}</view>
+    <view class="order_state">{{shop.order_state}}</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class shopTop extends wepy.component {
+  props = {
+    shop: {}
+  }
+  data = {
+  }
+}
+</script>
