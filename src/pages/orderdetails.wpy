@@ -447,14 +447,17 @@
       </scroll-view>
     </view>
   </view>
-  <view class="overlays" hidden="{{hidden}}" @tap="afterapply">
-    <view class="overlaysBox" hidden="{{afterchange}}">
+  <view class="overlays" wx:if="{{overlay}}">
+    <!-- 选择服务 -->
+    <view class="overlaysBox" wx:if="{{status==0}}">
       <image src="{{del_img}}" class="del"></image>
       <view class="title_name">{{title_name}}</view>
       <view class="after_return" @tap="afterreturn">{{after_return}}</view>
-      <view class="after_exchange" @tap="afterexchange">{{after_exchange}}</view>   
+      <view class="after_exchange" @tap="afterexchange">{{after_exchange}}</view> 
+      <view>{{status}}</view>  
     </view>
-    <view class="applyreturnBox overlaysBox" hidden="false">
+    <!-- 退货退款 -->
+    <view class="applyreturnBox overlaysBox" wx:if="{{status==1}}">
       <image src="{{del_img}}" class="del2 del"></image>
       <view class="title_name">{{after_return}}</view>
       <view class="after_returnBox">
@@ -465,17 +468,20 @@
         <view class="after_title">{{after_returnreasontitle}}</view>
         <view class="after_returnreason">{{after_returnreason}}</view>
       </view>
-      <view class="applybutton">{{applybutton}}</view>  
+      <view class="applybutton" @tap="applied">{{applybutton}}</view>  
+      <view>{{status}}</view>  
     </view>
-    <view class="after_exchangeBox overlaysBox applyreturnBox" hidden="false">
+    <!-- 换货 -->
+    <view class="after_exchangeBox overlaysBox applyreturnBox" wx:if="{{status==2}}">
       <image src="{{del_img}}" class="del2 del"></image>
       <view class="title_name">{{after_exchange}}</view>
       <view class="after_returnBox">
         <view class="after_title">{{after_exchangetitle}}</view>
         <view class="after_returnreason">{{after_exchangereason}}</view>
       </view>
-      <view class="applybutton">{{applybutton}}</view>  
-    </view>
+      <view class="applybutton" @tap="applied">{{applybutton}}</view>
+      <view>{{status}}</view>   
+    </view> 
   </view>
 </template>
 
@@ -487,9 +493,9 @@ export default class orderdetails extends wepy.page {
     navigationBarTitleText: '订单详情'
   }
   data = {
-    afterchange: false,
-    after: '',
+    overlay: false,
     hidden: false,
+    status: -1,
     address_img: '../images/place.png',
     peoplename: '李先生',
     peoplephone: '12312312312',
@@ -505,6 +511,7 @@ export default class orderdetails extends wepy.page {
     details_paytime: '2018-11-23 14:17',
     details_takename: '确认收货时间：',
     details_taketime: '--',
+    asd: 1,
     /* 2018-11-24 14:17
     details_aftername: '退换货（买家发货）：',
     details_returnname: '退换货原因：',
@@ -583,10 +590,18 @@ export default class orderdetails extends wepy.page {
   }
   methods = {
     afterapply() {
-      this.hidden = !this.hidden
+      this.status = 0
+      this.overlay = true
     },
     afterreturn() {
-      this.afterchange = !this.afterchange
+      this.status = 1
+    },
+    afterexchange() {
+      this.status = 2
+    },
+    applied() {
+      this.status = -1
+      this.overlay = false
     }
   }
 }

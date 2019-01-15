@@ -473,4 +473,4 @@ export default class myorder extends wepy.page {
     this.activeIndex = e.currentTarget.id
   }
 }
-</script>
+</script>f
