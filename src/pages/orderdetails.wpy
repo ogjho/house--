@@ -309,6 +309,32 @@
   .after_exchangeBox{
     height:600rpx;
   }
+  .apply_succress{
+    width:450rpx;
+    height:480rpx;
+    top:250rpx;
+    left:140rpx;
+  }
+  .succress_img{
+    height:174rpx;
+    width:160rpx;
+  }
+  .succress_content{
+    font-size: 30rpx;
+    color:#979797;
+  }
+  .closebutton{
+    font-size: 28rpx;
+    color:#979797;
+    border:1rpx solid #979797;
+    border-radius: 20rpx;
+    margin-top: 28rpx;
+    height:60rpx;
+    width:160rpx;
+    line-height: 60rpx;
+    margin:0rpx auto;
+    margin-top: 28rpx;
+  }
 </style>
 
 <template>
@@ -327,41 +353,43 @@
       <scroll-view scroll-y="true" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{ }}">
         <view class="orderdetailscontent_list">
           <view class="orderlistbackground">
+            <!-- 商品信息 -->
             <block wx:for="{{orderlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
-            <view class="order">
-              <view class="order_top">
-                <image src="{{item.shop_img}}" class="shop_img"></image>
-                <view class="shop_name">{{item.shop_name}}</view>
-                <view class="order_state">{{item.order_state}}</view>
-              </view>
-              <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
-                <image src="{{list.good_img}}" class="good_img"></image>
-                <view class="good_content">
-                  <view class="good_name">{{list.good_name}}</view>
-                  <view class="good_price">¥ {{list.good_price}}</view>
-                  <view class="good_size">
-                    <view class="good_sizename">{{list.good_sizename}}</view>
-                    <view class="good_num">X {{list.good_num}}</view>
-                    <view class="good_afterstate">{{list.good_afterstate}}</view>
+              <view class="order">
+                <view class="order_top">
+                  <image src="{{item.shop_img}}" class="shop_img"></image>
+                  <view class="shop_name">{{item.shop_name}}</view>
+                  <view class="order_state">{{item.order_state}}</view>
+                </view>
+                <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
+                  <image src="{{list.good_img}}" class="good_img"></image>
+                  <view class="good_content">
+                    <view class="good_name">{{list.good_name}}</view>
+                    <view class="good_price">¥ {{list.good_price}}</view>
+                    <view class="good_size">
+                      <view class="good_sizename">{{list.good_sizename}}</view>
+                      <view class="good_num">X {{list.good_num}}</view>
+                      <view class="good_afterstate">{{list.good_afterstate}}</view>
+                    </view>
+                    <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
+                    <view class="aftersale" @tap="afterapply">退换货</view>
                   </view>
-                  <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
-                  <view class="aftersale" @tap="afterapply">退换货</view>
+                </view>
+                <view class="totalPrices">
+                  <view class="suretaken">确认收货</view>
+                  <view class="good_totalPricesname">合计：
+                    <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
+                  </view>
                 </view>
               </view>
-              <view class="totalPrices">
-                <view class="suretaken">确认收货</view>
-                <view class="good_totalPricesname">合计：
-                  <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
-                </view>
-              </view>
-            </view>
-          </block>
-            <!-- <orderList :orderlist="orderlist"></orderList> -->
+            </block>
           </view>
+          <!-- 订单信息 -->
           <view class="orderdetailscontent"> 
             <view class="details_top">
               <view class="top_name">订单详情</view>
             </view>
+            <!-- 待确认收货  待发货-->
             <view class="details">
               <view class="details_content">
                 <view class="content">
@@ -386,6 +414,7 @@
                   <view class="details_taketime dis">{{details_taketime}}</view>
                 </view>
               </view>
+              <!-- 买家申请售后 退货 换货买家发货-->
               <view class="details_after" hidden="false">
                 <view class="content">
                   <view class="details_aftername dis">{{details_aftername}}</view>
@@ -412,6 +441,7 @@
                   <view class="details_copy dis">{{details_copy}}</view>
                 </view>
               </view>
+              <!-- 换货 商家发货-->
               <view class="barter_content" hidden="false">
                 <view class="content">
                   <view class="barter_name">{{barter_name}}</view>
@@ -428,12 +458,15 @@
               </view>
             </view>
           </view>
+          <!-- 回访记录 -->
           <view class="visit"> 
             <view class="visit_top">
               <view class="top_name">回访记录</view>
             </view>
-            <view class="nocontent" hidden="{{this.contentlist.length == 0 ? false : true}}">暂无回访记录</view>
-            <view class="visitcontent" hidden="{{this.contentlist.length != 0 ? false : true}}">
+            <!-- 无记录 -->
+            <view class="nocontent" wx:if="{{this.contentlist.length == 0}}">暂无回访记录</view>
+            <!-- 有记录 -->
+            <view class="visitcontent" wx:if="{{this.contentlist.length > 0}}">
               <block wx:for="{{contentlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
                 <view class="contentlist">
                   <view class="visit_time">{{item.visit_time}}</view>
@@ -442,23 +475,23 @@
               </block>
             </view>
           </view>
-          <view class="scroll-view-item" hidden="{{hidden}}">——别拉了，没数据了——</view>
+          <view class="scroll-view-item">——别拉了，没数据了——</view>
         </view>
       </scroll-view>
     </view>
   </view>
+  <!-- 售后浮层 -->
   <view class="overlays" wx:if="{{overlay}}">
     <!-- 选择服务 -->
     <view class="overlaysBox" wx:if="{{status==0}}">
-      <image src="{{del_img}}" class="del"></image>
+      <image src="{{del_img}}" class="del" @tap="delshow"></image>
       <view class="title_name">{{title_name}}</view>
       <view class="after_return" @tap="afterreturn">{{after_return}}</view>
-      <view class="after_exchange" @tap="afterexchange">{{after_exchange}}</view> 
-      <view>{{status}}</view>  
+      <view class="after_exchange" @tap="afterexchange">{{after_exchange}}</view>
     </view>
     <!-- 退货退款 -->
     <view class="applyreturnBox overlaysBox" wx:if="{{status==1}}">
-      <image src="{{del_img}}" class="del2 del"></image>
+      <image src="{{del_img}}" class="del2 del" @tap="delshow"></image>
       <view class="title_name">{{after_return}}</view>
       <view class="after_returnBox">
         <view class="after_title dis">{{after_returnmoneytitle}}</view>
@@ -468,20 +501,25 @@
         <view class="after_title">{{after_returnreasontitle}}</view>
         <view class="after_returnreason">{{after_returnreason}}</view>
       </view>
-      <view class="applybutton" @tap="applied">{{applybutton}}</view>  
-      <view>{{status}}</view>  
+      <view class="applybutton" @tap="applied">{{applybutton}}</view>
     </view>
     <!-- 换货 -->
     <view class="after_exchangeBox overlaysBox applyreturnBox" wx:if="{{status==2}}">
-      <image src="{{del_img}}" class="del2 del"></image>
+      <image src="{{del_img}}" class="del2 del" @tap="delshow"></image>
       <view class="title_name">{{after_exchange}}</view>
       <view class="after_returnBox">
         <view class="after_title">{{after_exchangetitle}}</view>
         <view class="after_returnreason">{{after_exchangereason}}</view>
       </view>
-      <view class="applybutton" @tap="applied">{{applybutton}}</view>
-      <view>{{status}}</view>   
-    </view> 
+      <view class="applybutton" @tap="applied">{{applybutton}}</view> 
+    </view>
+    <!-- 提交成功 -->
+    <view class="apply_succress overlaysBox" wx:if="{{status==3}}">
+      <view class="title_name">{{succresstitle_name}}</view>
+      <image src="{{succress_img}}" class="succress_img"></image>
+      <view class="succress_content">{{succress_content}}</view>
+      <view class="closebutton" @tap="close">关 闭</view>
+    </view>
   </view>
 </template>
 
@@ -494,7 +532,6 @@ export default class orderdetails extends wepy.page {
   }
   data = {
     overlay: false,
-    hidden: false,
     status: -1,
     address_img: '../images/place.png',
     peoplename: '李先生',
@@ -511,7 +548,6 @@ export default class orderdetails extends wepy.page {
     details_paytime: '2018-11-23 14:17',
     details_takename: '确认收货时间：',
     details_taketime: '--',
-    asd: 1,
     /* 2018-11-24 14:17
     details_aftername: '退换货（买家发货）：',
     details_returnname: '退换货原因：',
@@ -586,7 +622,10 @@ export default class orderdetails extends wepy.page {
     after_returnreason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺啊哈三对啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺',
     applybutton: '提交申请',
     after_exchangetitle: '请填写换货原因：',
-    after_exchangereason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺'
+    after_exchangereason: '啊哈三对哈斯东海U很耽误撒大口径萨的卡斯动脑筋卡萨诺雕刻机阿森纳的骄傲鼠年大吉阿森纳的骄傲鼠年大吉卡萨诺',
+    succresstitle_name: '提交成功',
+    succress_img: '../images/applysuccess.png',
+    succress_content: '待商家审核'
   }
   methods = {
     afterapply() {
@@ -600,6 +639,12 @@ export default class orderdetails extends wepy.page {
       this.status = 2
     },
     applied() {
+      this.status = 3
+    },
+    delshow() {
+      this.overlay = false
+    },
+    close() {
       this.status = -1
       this.overlay = false
     }
