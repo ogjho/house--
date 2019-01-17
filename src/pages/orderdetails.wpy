@@ -81,6 +81,7 @@
     font-size: 26rpx;
     color:#333;
     width:298rpx;
+    overflow: hidden;
     display: inline-block;
   }
   .good_price{
@@ -126,6 +127,7 @@
   .totalPrices{
     margin:0rpx 30rpx;
     padding:18rpx 0rpx;
+    height: 60rpx;
   }
   .good_totalPricesname{
     font-size: 28rpx;
@@ -140,7 +142,7 @@
     font-size: 32rpx;
     color: #BC2020;
   }
-  .suretaken{
+  .sure_taken,.sure,.close{
     font-size: 28rpx;
     color:#DD6549;
     height:60rpx;
@@ -187,7 +189,7 @@
   .visit{
     margin-top:20rpx;
     padding-bottom: 10rpx;
-    margin-bottom:80rpx;
+    margin-bottom:50rpx;
   }
   .nocontent{
     font-size: 28rpx;
@@ -202,12 +204,12 @@
     overflow: hidden;
   }
   .scroll-view-item{
-    height:120rpx;
+    height:80rpx;
     padding-bottom: 20rpx;
     text-align: center;
     color: #9B9B9B;
     font-size: 28rpx;
-    line-height: 120rpx;
+    line-height: 60rpx;
   }
     .overlays{
     background-color: rgba(0,0,0,.6);
@@ -259,6 +261,9 @@
     line-height: 40rpx;
     margin:0rpx auto;
     margin-bottom: 50rpx;
+  }
+  .after_return{
+    margin-top: 50rpx;
   }
   .after_title{
     font-size: 30rpx;
@@ -319,7 +324,7 @@
     height:174rpx;
     width:160rpx;
   }
-  .succress_content{
+  .succress_content,.sure_content{
     font-size: 30rpx;
     color:#979797;
   }
@@ -334,6 +339,17 @@
     line-height: 60rpx;
     margin:0rpx auto;
     margin-top: 28rpx;
+  }
+  .sureBox{
+    height:320rpx;
+  }
+  .sure_content{
+    margin-bottom: 40rpx;
+  }
+  .close{
+    color:#979797;
+    border-color: #979797;
+    margin-left:30rpx;
   }
 </style>
 
@@ -359,7 +375,7 @@
                 <view class="order_top">
                   <image src="{{item.shop_img}}" class="shop_img"></image>
                   <view class="shop_name">{{item.shop_name}}</view>
-                  <view class="order_state">{{item.order_state}}</view>
+                  <view class="order_state">{{item.orderstate}}</view>
                 </view>
                 <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
                   <image src="{{list.good_img}}" class="good_img"></image>
@@ -369,14 +385,16 @@
                     <view class="good_size">
                       <view class="good_sizename">{{list.good_sizename}}</view>
                       <view class="good_num">X {{list.good_num}}</view>
-                      <view class="good_afterstate">{{list.good_afterstate}}</view>
+                      <view class="good_afterstate" wx:if="{{serve == 1 & serve == 2}}">{{list.good_afterstate}}</view>
+                      <view class="good_afterstate">审核中</view>
                     </view>
                     <view class="good_afterdays">{{list.good_afterdays}}天退换</view>
-                    <view class="aftersale" @tap="afterapply">退换货</view>
+                    <view class="aftersale" @tap="afterapply" hidden="{{activeIndex != 3}}">退换货</view>
+                    <view class="aftersale" @tap="logistics" hidden="{{activeIndex != 5}}">填写物流信息</view>
                   </view>
                 </view>
                 <view class="totalPrices">
-                  <view class="suretaken">确认收货</view>
+                  <view class="sure_taken" hidden="{{activeIndex != 2}}" @tap="suretaken" data-index="{{index}}">确认收货</view>
                   <view class="good_totalPricesname">合计：
                     <view class="good_totalPrices">¥ {{item.good_totalPrices}}</view>
                   </view>
@@ -396,11 +414,11 @@
                   <view class="details_numblename dis">{{details_name}}</view>
                   <view class="details_numble dis">{{details_numble}}</view>
                 </view>
-                <view class="content">
+                <view class="content" hidden="{{activeIndex != 2 & activeIndex != 3}}">
                   <view class="details_couriername dis">{{details_couriername}}</view>
                   <view class="details_couriercompany dis">{{details_couriercompany}}</view>
                 </view>
-                <view class="content">
+                <view class="content"  hidden="{{activeIndex != 2 & activeIndex != 3}}">
                   <view class="details_courier dis">{{details_courier}}</view>
                   <view class="details_couriernumber dis">{{details_couriernumber}}</view>
                   <view class="details_copy dis">{{details_copy}}</view>
@@ -409,13 +427,13 @@
                   <view class="details_payname dis">{{details_payname}}</view>
                   <view class="details_paytime dis">{{details_paytime}}</view>
                 </view>
-                <view class="content">
+                <view class="content" hidden="{{activeIndex != 3}}">
                   <view class="details_takename dis">{{details_takename}}</view>
                   <view class="details_taketime dis">{{details_taketime}}</view>
                 </view>
               </view>
               <!-- 买家申请售后 退货 换货买家发货-->
-              <view class="details_after" hidden="false">
+              <view class="details_after" wx:if="{{serve == 1}}">
                 <view class="content">
                   <view class="details_aftername dis">{{details_aftername}}</view>
                 </view>
@@ -442,7 +460,7 @@
                 </view>
               </view>
               <!-- 换货 商家发货-->
-              <view class="barter_content" hidden="false">
+              <view class="barter_content" wx:if="{{serve == 2}}">
                 <view class="content">
                   <view class="barter_name">{{barter_name}}</view>
                 </view>
@@ -464,9 +482,9 @@
               <view class="top_name">回访记录</view>
             </view>
             <!-- 无记录 -->
-            <view class="nocontent" wx:if="{{this.contentlist.length == 0}}">暂无回访记录</view>
+            <view class="nocontent" hidden="{{this.contentlist.length == 0}}">暂无回访记录</view>
             <!-- 有记录 -->
-            <view class="visitcontent" wx:if="{{this.contentlist.length > 0}}">
+            <view class="visitcontent" hidden="{{this.contentlist.length != 0}}">
               <block wx:for="{{contentlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
                 <view class="contentlist">
                   <view class="visit_time">{{item.visit_time}}</view>
@@ -482,6 +500,13 @@
   </view>
   <!-- 售后浮层 -->
   <view class="overlays" wx:if="{{overlay}}">
+    <!-- 确认收货 -->
+    <view class="overlaysBox sureBox" wx:if="{{status==4}}">
+      <view class="title_name">确认收货</view>
+      <view class="sure_content">是否确认收货？</view>
+      <view class="sure" @tap="sure">确认</view>
+      <view class="close" @tap="close">关闭</view>
+    </view>
     <!-- 选择服务 -->
     <view class="overlaysBox" wx:if="{{status==0}}">
       <image src="{{del_img}}" class="del" @tap="delshow"></image>
@@ -531,6 +556,8 @@ export default class orderdetails extends wepy.page {
     navigationBarTitleText: '订单详情'
   }
   data = {
+    activeIndex: 0,
+    serve: 0,
     overlay: false,
     status: -1,
     address_img: '../images/place.png',
@@ -547,8 +574,7 @@ export default class orderdetails extends wepy.page {
     details_payname: '付款时间：',
     details_paytime: '2018-11-23 14:17',
     details_takename: '确认收货时间：',
-    details_taketime: '--',
-    /* 2018-11-24 14:17
+    details_taketime: '2018-11-24 14:17',
     details_aftername: '退换货（买家发货）：',
     details_returnname: '退换货原因：',
     details_returnreason: '质量问题',
@@ -564,13 +590,13 @@ export default class orderdetails extends wepy.page {
     barter_couriername: '快递公司：',
     barter_couriercompany: '中通快递',
     barter_courier: '快递单号：',
-    barters_couriernumber: '123123123123', */
+    barters_couriernumber: '123123123123',
     orderlist: [
       {
         id: '0',
         shop_img: '../images/shop.png',
         shop_name: '简家之域商城',
-        order_state: '已完成',
+        orderstate: '待收货',
         list: [
           {
             id: '0.1',
@@ -579,8 +605,9 @@ export default class orderdetails extends wepy.page {
             good_price: '12000.00',
             good_sizename: '银色',
             good_num: '1',
-            good_afterstate: '',
-            good_afterdays: '15'
+            good_afterstate: '退货中',
+            good_afterdays: '15',
+            return: 0
           },
           {
             id: '0.2',
@@ -589,8 +616,9 @@ export default class orderdetails extends wepy.page {
             good_price: '12000.00',
             good_sizename: '银色',
             good_num: '1',
-            good_afterstate: '',
-            good_afterdays: '15'
+            good_afterstate: '换货中',
+            good_afterdays: '15',
+            return: 0
           }],
         good_totalPrices: '24000.00'
       }
@@ -634,12 +662,19 @@ export default class orderdetails extends wepy.page {
     },
     afterreturn() {
       this.status = 1
+      this.serve = -1
     },
     afterexchange() {
       this.status = 2
+      this.serve = -2
     },
     applied() {
       this.status = 3
+      if (this.serve === -1) {
+        this.serve = 1
+      } else if (this.serve === -2) {
+        this.serve = 2
+      }
     },
     delshow() {
       this.overlay = false
@@ -647,7 +682,37 @@ export default class orderdetails extends wepy.page {
     close() {
       this.status = -1
       this.overlay = false
+    },
+    suretaken() {
+      this.status = 4
+      this.overlay = true
+    },
+    sure(event) {
+      this.activeIndex = 3
+      this.status = -1
+      this.overlay = false
+      let orderlist = this.orderlist
+      let orderstate = orderlist[0].orderstate
+      console.log(orderstate)
     }
+  }
+  orderstate() {
+    let orderlist = this.orderlist
+    for (let i = 0; i < orderlist.length; i++) {
+      if (orderlist[i].orderstate === '待发货') {
+        this.activeIndex = 1
+        break
+      } else if (orderlist[i].orderstate === '待收货') {
+        this.activeIndex = 2
+        break
+      } else if (orderlist[i].orderstate === '已完成') {
+        this.activeIndex = 3
+        break
+      }
+    }
+  }
+  onLoad() {
+    this.orderstate()
   }
 }
 </script>

@@ -141,7 +141,7 @@
     <view class="weui-tab">
       <view class="tab">
         <block wx:for="{{tabs}}" wx:key="*this">
-          <view id="{{index}}" class="tab-list {{activeIndex == index ? 'changed' : ''}}" bindtap="tabClick">
+          <view id="{{index}}" class="tab-list {{activeIndex == index ? 'changed' : ''}}" @tap="tabClick">
             <view class="weui-navbar__title">{{item}}</view>
           </view>
         </block>
@@ -304,7 +304,7 @@ export default class myorder extends wepy.page {
   }
   data = {
     tabs: ['全部', '待发货', '待收货', '已完成'],
-    activeIndex: 3,
+    activeIndex: 0,
     alllist: false,
     waitsend: false,
     waittake: false,
