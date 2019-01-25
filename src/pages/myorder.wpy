@@ -178,9 +178,8 @@
               </view>
             </view>
           </block>
-          <view wx:if="{{alllist}}"></view>
-          <view class="nocontentBox" wx:else>
-            <view class="nocontent">{{nocontent}}</view>
+          <view class="nocontentBox" wx:if="{{this.orderlist.length > 3}}">
+            <view class="nocontent">~~别拉了，没数据了~~</view>
           </view>
         </view>
         <!-- 待发货 -->
@@ -214,9 +213,8 @@
               </view>
             </view>
           </block>
-          <view wx:if="{{waitsend}}"></view>
-          <view class="nocontentBox" wx:else>
-            <view class="nocontent">{{nocontent}}</view>
+          <view class="nocontentBox" wx:if="{{this.waitsendlist.length > 2}}">
+            <view class="nocontent">~~别拉了，没数据了~~</view>
           </view>
         </view>
         <!-- 待收货 -->
@@ -250,9 +248,8 @@
               </view>
             </view>
           </block>
-          <view wx:if="{{waittake}}"></view>
-          <view class="nocontentBox" wx:else>
-            <view class="nocontent">{{nocontent}}</view>
+          <view class="nocontentBox" wx:if="{{this.waittakelist.length > 2}}">
+            <view class="nocontent">~~别拉了，没数据了~~</view>
           </view>
         </view>
         <!-- 已完成 -->
@@ -286,8 +283,8 @@
               </view>
             </view>
           </block>
-          <view class="nocontentBox">
-            <view class="nocontent" hidden="{{this.finishlist.length >= 2 ? true : false}}">{{nocontent}}</view>
+          <view class="nocontentBox" wx:if="{{this.finishlist.length > 2}}">
+            <view class="nocontent">~~别拉了，没数据了~~</view>
           </view>
         </view>
       </view>
@@ -305,11 +302,6 @@ export default class myorder extends wepy.page {
   data = {
     tabs: ['全部', '待发货', '待收货', '已完成'],
     activeIndex: 0,
-    alllist: false,
-    waitsend: false,
-    waittake: false,
-    finish: false,
-    nocontent: '~~别拉了，没数据了~~',
     orderlist: [
       {
         id: '0',
@@ -414,6 +406,44 @@ export default class myorder extends wepy.page {
           }
         ],
         good_totalPrices: '12000.00'
+      },
+      {
+        id: '1',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待发货',
+        list: [
+          {
+            id: '1.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
+      },
+      {
+        id: '2',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '待发货',
+        list: [
+          {
+            id: '2.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }
+        ],
+        good_totalPrices: '12000.00'
       }
     ],
     waittakelist: [
@@ -465,6 +495,24 @@ export default class myorder extends wepy.page {
             good_afterdays: '15'
           }],
         good_totalPrices: '24000.00'
+      },
+      {
+        id: '1',
+        shop_img: '../images/shop.png',
+        shop_name: '简家之域商城',
+        order_state: '已完成',
+        list: [
+          {
+            id: '1.1',
+            good_img: '../images/goods.jpg',
+            good_name: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+            good_price: '12000.00',
+            good_sizename: '银色',
+            good_num: '1',
+            good_afterstate: '',
+            good_afterdays: '15'
+          }],
+        good_totalPrices: '24000.00'
       }
     ]
   }
@@ -472,5 +520,6 @@ export default class myorder extends wepy.page {
     this.sliderOffset = e.currentTarget.offsetLeft
     this.activeIndex = e.currentTarget.id
   }
+  onLoad() {}
 }
 </script>f
