@@ -1,4 +1,4 @@
-const HOST = 'http://www.简家之域.com/api/'
+const HOST = 'http://www.简家之域.com/'
 const $baseURL = 'http://www.简家之域.com'
 // const HOST = 'http://127.0.0.1:3004'
 // const $baseURL = 'http://127.0.0.1:8080'

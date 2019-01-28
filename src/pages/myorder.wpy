@@ -134,17 +134,98 @@
   .nocontentno{
     display: none;
   }
+  .loginWrap{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 3;
+    margin: auto;
+    background-color: #FFF;
+    text-align: center;
+  }
+  .loginBtn{
+    width: 480rpx;
+    height: 88rpx;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: #50B674;
+    font-size: 0;
+    display: block;
+    border-radius: 44rpx;
+    padding: 0;
+    overflow: hidden;
+  }
+  .loginIcon{
+    width: 70rpx;
+    height: 70rpx;
+    overflow: hidden;
+    margin: 9rpx;
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+  }
+  .loginText{
+    font-size: 36rpx;
+    line-height: 88rpx;
+    color: #FFF;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .loginLogo{
+    width: 500rpx;
+    position: absolute;
+    top: 30%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    display: block;
+  }
+  .userinfoWrap{
+    width: 750rpx;
+    height: 250rpx;
+    padding: 50rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    font-size: 0;
+    text-align: left;
+    background-color: #FFF;
+  }
+  .userinfoAvatar{
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 50rpx;
+  }
+  .userinfoNickname{
+    color: #444;
+    font-size: 34rpx;
+    line-height: 150rpx;
+    display: inline-block;
+    vertical-align: middle;
+  }
 </style>
 
 <template>
   <view class="myorder">
-    <view class="weui-tab">
+    <view class="weui-tab" wx:if="{{isLogin}}">
       <view class="tab">
         <block wx:for="{{tabs}}" wx:key="*this">
           <view id="{{index}}" class="tab-list {{activeIndex == index ? 'changed' : ''}}" @tap="tabClick">
             <view class="weui-navbar__title">{{item}}</view>
           </view>
         </block>
+      </view>
+      <view class="userinfoWrap">
+        <image class="userinfoAvatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+        <view class="userinfoNickname">{{ userInfo.nickName }}</view>
       </view>
       <view class="orderList">
         <!-- 全部 -->
@@ -289,17 +370,32 @@
         </view>
       </view>
     </view>
+    <view class="loginWrap" wx:elif="{{!isLogin && isLogin !== null}}">
+      <image class="loginLogo" mode="widthFix" src="../images/logo.png"></image>
+      <button wx:if="{{canIUse}}" class="loginBtn" open-type='getUserInfo' bindgetuserinfo="getUserData" >
+        <image class="loginIcon" src="../images/wechat.png"></image>
+        <view class="loginText" >微信授权登录</view>
+      </button>
+      <view class="loginText loginBtn" wx:else>请升级微信版本</view>
+    </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import Fetch from '../library/fetch'
+import LoginModel from '../models/loginModel'
 
 export default class myorder extends wepy.page {
   config = {
     navigationBarTitleText: '我的订单'
   }
   data = {
+    userInfo: {
+      nickName: '加载中...'
+    },
+    canIUse: true,
+    isLogin: false,
     tabs: ['全部', '待发货', '待收货', '已完成'],
     activeIndex: 0,
     orderlist: [
@@ -516,10 +612,70 @@ export default class myorder extends wepy.page {
       }
     ]
   }
+  methods = {
+    async getUserData(data) {
+      let userInfo = data.detail.userInfo
+      if (!userInfo) {
+        return
+      }
+      this.isLogin = true
+      this.userInfo = userInfo
+      this.userInfo.openid = this.$parent.globalData.openid
+      this.$parent.globalData.userData = this.userInfo
+      let clientData = await LoginModel.fetchLogin(this.userInfo)
+      Fetch.setCookie(clientData)
+    }
+  }
   tabClick(e) {
     this.sliderOffset = e.currentTarget.offsetLeft
     this.activeIndex = e.currentTarget.id
   }
-  onLoad() {}
+
+  getUserInfo() {
+    return new Promise((resolve, reject) => {
+      wx.getUserInfo({
+        success(res) {
+          resolve(res.userInfo)
+        },
+        fail(res) {
+          console.log(res)
+          resolve(false)
+        }
+      })
+    })
+  }
+  async onLoad() {
+    // 查看是否授权
+    this.canIUse = wx.canIUse('button.open-type.getUserInfo')
+    if (JSON.stringify(this.$parent.globalData.userData) !== '{}') {
+      this.userInfo = this.$parent.globalData.userData
+      this.isLogin = true
+      this.$apply()
+    } else if (this.canIUse) {
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      this.$parent.userInfoReadyCallback = async (res) => {
+        this.userInfo = res.userInfo
+        this.userInfo.openid = this.$parent.globalData.openid
+        let clientData = await LoginModel.fetchLogin(this.userInfo)
+        Fetch.setCookie(clientData)
+        this.isLogin = true
+        this.$apply()
+      }
+    } else {
+      this.userInfo = await this.getUserInfo()
+      this.userInfo.openid = this.$parent.globalData.openid
+      this.$parent.globalData.userData = this.userInfo
+      let clientData = await LoginModel.fetchLogin(this.userInfo)
+      Fetch.setCookie(clientData)
+      this.isLogin = true
+      this.$apply()
+    }
+  }
+  async onReady() {
+    setTimeout(function() {
+      wx.hideLoading()
+    }, 1000)
+  }
 }
 </script>f
