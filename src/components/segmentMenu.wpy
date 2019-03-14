@@ -1,0 +1,83 @@
+<style lang="css" scoped>
+.segmentMenuWrap{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin: 0 auto;
+  width: 750rpx;
+  height: 88rpx;
+  background-color: #FFF;
+  overflow: hidden;
+  box-shadow: 1rpx 0 4rpx rgba(0,0,0,.5);
+  -webkit-box-shadow: 1rpx 0 4rpx rgba(0,0,0,.5);
+  z-index: 5;
+}
+.segmentMenuPer{
+  width: 210rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  line-height: 88rpx;
+  text-align: center;
+  height: 88rpx;
+  display: inline-block;
+  vertical-align: middle;
+}
+.segmentLine{
+  height: 4rpx;
+  width: 60rpx;
+  margin: -4rpx auto 0 auto;
+  background-color: #BC2020;
+}
+</style>
+<template>
+  <view>
+    <view class="segmentMenuWrap" style="{{staticPosi ? 'position:relative;' : topStyle ? 'top:'+topStyle+'rpx;' : null}}">
+      <view class="segmentMenuPer"
+            wx:for="{{itemsData}}"
+            wx:key="key"
+            @tap="_selectSegment({{item.select}})"
+            style="{{item.select === selectedIndex ? 'color: #BC2020;width:'+newWidth : 'width:'+newWidth}}">
+        {{item.title}}
+        <view wx:if="{{item.select === selectedIndex}}" class="segmentLine"></view>
+      </view>
+    </view>
+    <view wx:if="{{!staticPosi}}" style="padding-bottom:88rpx"></view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class SegmentMenu extends wepy.component {
+  props = {
+    itemsData: {
+      default: null
+    },
+    selectedIndex: {
+      default: null
+    },
+    staticPosi: {
+      default: false
+    },
+    topStyle: {
+      default: null
+    }
+  }
+  data={
+    newWidth: '210rpx'
+  }
+  methods = {
+    _selectSegment(index) {
+      this.$emit('selectSegment', index)
+    }
+  }
+  onLoad() {
+    if (this.itemsData.length > 3) {
+      this.newWidth = (100 / this.itemsData.length).toFixed(2) + '%'
+      this.$apply()
+    }
+  }
+}
+</script>

@@ -1,5 +1,5 @@
-const HOST = 'http://www.简家之域.com/'
-const $baseURL = 'http://www.简家之域.com'
+const HOST = 'http://www.jianjiazhiyu.com'
+const $baseURL = 'http://www.jianjiazhiyu.com'
 // const HOST = 'http://127.0.0.1:3004'
 // const $baseURL = 'http://127.0.0.1:8080'
 const STORAGE_COOKIE_KEY = 'jianjia_cookie'
@@ -28,7 +28,7 @@ module.exports = {
 		        data: options.data,
 		        method: options.method || 'GET',
 		        header: {
-		          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+		          'content-type': 'application/json; charset=UTF-8',
 		          'cookie': ___tempCookie
 		        },
 		        complete: function (res) {
@@ -37,7 +37,7 @@ module.exports = {
 			              	throw new Error(res.errMsg + res.statusCode)
 			            }
 			            if (res.data && res.data.code !== 0) {
-			              	throw new Error(res.data.msg)
+			              	/* throw new Error(res.msg) */
 			            }
 			            resolve(res.data.data)
 			            callback && callback(res.data.data, null, res)

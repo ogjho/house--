@@ -1,0 +1,28 @@
+<style lang="css" scoped>
+.loadingDoneWrap{
+  position: relative;
+  height: 100rpx;
+  margin: 40rpx auto;
+  text-align: center;
+  font-size: 0;
+}
+.text{
+  font-size: 28rpx;
+  color: #9B9B9B;
+  line-height: 100rpx;
+  margin-bottom: 10rpx;
+}
+</style>
+<template>
+  <view class="loadingDoneWrap">
+    <view class="text">—— 别拉了，数据都被拉没了 ——</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class LoadingDone extends wepy.component {
+  props = {
+  }
+}
+</script>

@@ -1,0 +1,66 @@
+<style lang="css" scoped>
+.emptyWrap{
+  position: relative;
+  margin: 250rpx auto;
+  padding: 0;
+  text-align: center;
+}
+.emptyMark{
+	width: 200rpx;
+	height: 200rpx;
+	display: inline-block;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.emptyText{
+  margin-top: 50rpx;
+  font-size: 30rpx;
+  color: #9B9B9B;
+  line-height: 42rpx;
+}
+.emptyBtn{
+  width: 250rpx;
+  height: 98rpx;
+  line-height: 98rpx;
+  font-size: 30rpx;
+  background-color: #BC2020;
+  color: #FFFFFF;
+  border-radius: 8rpx;
+  margin: 50rpx auto 0 auto;
+}
+</style>
+<template>
+  <view class="emptyWrap">
+  	<image class="emptyMark" src="../images/empty.png"></image>
+    <view class="emptyText">{{emptyText}}</view>
+    <view  wx:if="{{emptyLink}}" class="emptyBtn" @tap="goLink({{emptyLink}})">{{emptyBtnText ? emptyBtnText : '返回首页'}}</view>
+    <view class="whiteBackground"></view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Navi from '../library/navi'
+export default class Empty extends wepy.component {
+  props = {
+    emptyText: {
+      default: null
+    },
+    emptyLink: {
+      default: null
+    },
+    emptyBtnText: {
+      default: null
+    }
+  };
+  methods = {
+    goLink(link) {
+      if (link === 'index') {
+        Navi.switchTab('index')
+        return
+      }
+      Navi.go(link)
+    }
+  }
+}
+</script>

@@ -217,9 +217,9 @@
   <view class="myorder">
     <view class="weui-tab" wx:if="{{isLogin}}">
       <view class="tab">
-        <block wx:for="{{tabs}}" wx:key="*this">
-          <view id="{{index}}" class="tab-list {{activeIndex == index ? 'changed' : ''}}" @tap="tabClick">
-            <view class="weui-navbar__title">{{item}}</view>
+        <block wx:for="{{tabs}}" wx:key="item.key">
+          <view id="{{item.select}}" class="tab-list {{activeIndex == item.select ? 'changed' : ''}}" @tap="tabClick">
+            <view class="weui-navbar__title">{{item.title}}</view>
           </view>
         </block>
       </view>
@@ -230,14 +230,14 @@
       <view class="orderList">
         <!-- 全部 -->
         <view class="tab__content" hidden="{{activeIndex != 0}}">
-          <block wx:for="{{orderlist}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+          <block wx:for="{{orderlist}}" wx:for-item="item" wx:key="item.storeId" wx:for-index="index">
             <view class="order">
               <view class="order_top">
                 <image src="{{item.shop_img}}" class="shop_img"></image>
                 <view class="shop_name">{{item.shop_name}}</view>
                 <view class="order_state">{{item.order_state}}</view>
               </view>
-              <view @tap="go">
+              <view @tap="go({{item.link}})">
                 <view class="goods" wx:for="{{item.list}}" wx:for-item="list" wx:key="list.id" wx:for-index="list.index" data-goodid="{{index}}">
                   <image src="{{list.good_img}}" class="good_img"></image>
                   <view class="good_content">
@@ -384,7 +384,7 @@
 <script>
 import wepy from 'wepy'
 import Fetch from '../library/fetch'
-import LoginModel from '../models/loginModel'
+import Navi from '../library/navi'
 
 export default class myorder extends wepy.page {
   config = {
@@ -394,9 +394,31 @@ export default class myorder extends wepy.page {
     userInfo: {
       nickName: '加载中...'
     },
+    pageIndex: '1',
+    pageSize: 10,
     canIUse: true,
     isLogin: false,
-    tabs: ['全部', '待发货', '待收货', '已完成'],
+    tabs: [
+      {
+        key: 'all',
+        select: 0,
+        title: '全部'
+      },
+      {
+        key: 'package',
+        select: 1,
+        title: '待发货'
+      },
+      {
+        key: 'receiving',
+        select: 2,
+        title: '待收货'
+      },
+      {
+        key: 'finish',
+        select: 3,
+        title: '已完成'
+      }],
     activeIndex: 0,
     orderlist: [
       {
@@ -615,6 +637,7 @@ export default class myorder extends wepy.page {
   methods = {
     async getUserData(data) {
       let userInfo = data.detail.userInfo
+      console.log(data.detail.userInfo)
       if (!userInfo) {
         return
       }
@@ -622,11 +645,55 @@ export default class myorder extends wepy.page {
       this.userInfo = userInfo
       this.userInfo.openid = this.$parent.globalData.openid
       this.$parent.globalData.userData = this.userInfo
-      let clientData = await LoginModel.fetchLogin(this.userInfo)
+      this.userInfo.wxEncryptedDataDTO = this.$parent.globalData.wxEncryptedDataDTO
+      let clientData = await this.$parent.upUserInfo(this.userInfo)
       Fetch.setCookie(clientData)
+    },
+    go(link) {
+      Navi.go(link)
     }
   }
-  tabClick(e) {
+
+  async onLoad () {
+    /* wx.showLoading({
+      title: '加载中',
+      mask: true
+    }) */
+    // 查看是否授权
+    this.canIUse = wx.canIUse('button.open-type.getUserInfo')
+    if (JSON.stringify(this.$parent.globalData.userData) !== '{}') {
+      this.userInfo = this.$parent.globalData.userData
+      this.isLogin = true
+      wx.hideLoading()
+      this.$apply()
+    } else if (this.canIUse) {
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      this.$parent.userInfoReadyCallback = async (res) => {
+        this.userInfo = res.userInfo
+        this.userInfo.openid = this.$parent.globalData.openid
+        this.userInfo.wxEncryptedDataDTO = this.$parent.globalData.wxEncryptedDataDTO
+        let clientData = await this.$parent.upUserInfo(this.userInfo)
+        Fetch.setCookie(clientData)
+        this.isLogin = true
+        wx.hideLoading()
+        this.$apply()
+      }
+    } else {
+      this.userInfo = await this.getUserInfo()
+      this.userInfo.openid = this.$parent.globalData.openid
+      this.$parent.globalData.userData = this.userInfo
+      this.userInfo.wxEncryptedDataDTO = this.$parent.globalData.wxEncryptedDataDTO
+      console.log(this.userInfo.wxEncryptedDataDTO)
+      let clientData = await this.$parent.upUserInfo(this.userInfo)
+      Fetch.setCookie(clientData)
+      this.isLogin = true
+      wx.hideLoading()
+      this.$apply()
+    }
+  }
+
+  async tabClick(e) {
     this.sliderOffset = e.currentTarget.offsetLeft
     this.activeIndex = e.currentTarget.id
   }
@@ -635,6 +702,7 @@ export default class myorder extends wepy.page {
     return new Promise((resolve, reject) => {
       wx.getUserInfo({
         success(res) {
+          console.log(res.userInfo)
           resolve(res.userInfo)
         },
         fail(res) {
@@ -644,38 +712,5 @@ export default class myorder extends wepy.page {
       })
     })
   }
-  async onLoad() {
-    // 查看是否授权
-    this.canIUse = wx.canIUse('button.open-type.getUserInfo')
-    if (JSON.stringify(this.$parent.globalData.userData) !== '{}') {
-      this.userInfo = this.$parent.globalData.userData
-      this.isLogin = true
-      this.$apply()
-    } else if (this.canIUse) {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      this.$parent.userInfoReadyCallback = async (res) => {
-        this.userInfo = res.userInfo
-        this.userInfo.openid = this.$parent.globalData.openid
-        let clientData = await LoginModel.fetchLogin(this.userInfo)
-        Fetch.setCookie(clientData)
-        this.isLogin = true
-        this.$apply()
-      }
-    } else {
-      this.userInfo = await this.getUserInfo()
-      this.userInfo.openid = this.$parent.globalData.openid
-      this.$parent.globalData.userData = this.userInfo
-      let clientData = await LoginModel.fetchLogin(this.userInfo)
-      Fetch.setCookie(clientData)
-      this.isLogin = true
-      this.$apply()
-    }
-  }
-  async onReady() {
-    setTimeout(function() {
-      wx.hideLoading()
-    }, 1000)
-  }
 }
-</script>f
+</script>

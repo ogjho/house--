@@ -1,0 +1,139 @@
+<style lang="css" scoped>
+.gototopIconWrap{
+  position: fixed;
+  width: 100rpx;
+  height: 200rpx;
+  right: 20rpx;
+  bottom: 100rpx;
+  font-size: 0;
+  z-index: 8;
+  border-radius: 8rpx;
+  text-align: center;
+  background-color: rgba(0, 0, 0, .6);
+}
+.gototopIcon{
+	width: 54rpx;
+	height: 54rpx;
+  padding: 22rpx;
+	overflow: hidden;
+  display: inline-block;
+  margin: 0;
+}
+.gototopLine{
+  width: 54rpx;
+  height: 1rpx;
+  background-color: #FFFFFF;
+  display: inline-block;
+}
+.serverDialogWrap{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  overflow: hidden;
+  margin: auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.serverDialogContent{
+  position: absolute;
+  width: 600rpx;
+  left: 0;
+  right: 0;
+  background-color: #FFF;
+  z-index: 9;
+  padding: 50rpx;
+  box-sizing: border-box;
+  margin: auto;
+  border-radius: 20rpx;
+}
+.serverDialogClose{
+  position: absolute;
+  top: 14rpx;
+  right: 14rpx;
+  z-index: 9;
+  width: 54rpx;
+  height: 54rpx;
+}
+.serverDialogImageWrap{
+  max-height: 600rpx;
+  overflow-y: scroll;
+}
+.serverDialogImage{
+  width: 166rpx;
+  height: 166rpx;
+  display: inline-block;
+  vertical-align: top;
+  padding: 12rpx;
+  box-sizing: border-box;
+}
+</style>
+<template>
+  <view class="gototopIconWrap">
+    <image class="gototopIcon" @tap="_serverDialog" src="../images/server.png"></image>
+    <view class="gototopLine"></view>
+    <image class="gototopIcon" @tap="_goTop" src="../images/top.png"></image>
+  </view>
+  <view wx:if="{{isShowServerDialog}}" class="serverDialogWrap">
+    <view class="serverDialogContent">
+      <image class="serverDialogClose" @tap="_closeDialog" src="../images/close.png"></image>
+      <view class="serverDialogImageWrap">
+        <image class="serverDialogImage"
+          wx:for="{{serverImage}}"
+          wx:key="{{item.key}}"
+          src="{{item.image}}"
+          @tap="previewImage({{item.image}})">
+        </image>
+      </view>
+    </view>
+    <view class="blackBackground" @tap="_closeDialog"></view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Gototop extends wepy.component {
+  props = {
+  }
+  data = {
+    isShowServerDialog: false,
+    serverImage: []
+  }
+  methods = {
+    _goTop () {
+      this.$emit('goTop')
+    },
+    _serverDialog () {
+      if (this.serverImage.length === 0) {
+        this.$parent.$parent.messageDialog('商家正在组建客服团队')
+        return
+      }
+      this.isShowServerDialog = true
+    },
+    _closeDialog () {
+      this.isShowServerDialog = false
+    },
+    previewImage (current) {
+      let newServerImage = []
+      this.serverImage.map((single) => {
+        newServerImage.push(single.image)
+      })
+      wx.previewImage({
+        current: current,
+        urls: newServerImage
+      })
+    }
+  }
+  async fetchFactoryData () {
+    this.serverImage = this.$parent.$parent.globalData.factoryData.serviceUrls
+    this.$apply()
+  }
+  async onLoad() {
+    await this.fetchFactoryData()
+  }
+}
+</script>

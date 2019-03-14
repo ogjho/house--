@@ -11,8 +11,10 @@ module.exports = {
         this.orderData = data
     },
     fetchOrder: function(param){
+        console.log(param)
+        let self = this
         var options = {
-            url: '/order/get',
+            url: '/api/order',
             data: param
         }
         return Fetch.get(options)
@@ -20,8 +22,8 @@ module.exports = {
                         this._dataFilter(data)
                         return this.orderData
                     })
-    },
-    orderFinish: function(param){
+    }/* , */
+    /* orderFinish: function(param){
         var options = {
             url: '/order/finish',
             data: param
@@ -51,5 +53,5 @@ module.exports = {
             data: param
         }
         return Fetch.post(options)
-    }
+    } */
 }

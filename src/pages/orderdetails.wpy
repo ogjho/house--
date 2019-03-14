@@ -32,7 +32,7 @@
     background-color: #fff;
     width: 750rpx;
   }
-    .order{
+  .order{
     margin:20rpx 10rpx 20rpx 10rpx;
     background-color: #fff;
     border-radius: 10rpx;

@@ -2,6 +2,82 @@
  .dis{
   display: inline-block;
  }
+ page {
+  background-color: #F3F3F3;
+}
+.container {
+  height: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.whiteBackground {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  padding: 0;
+  background-color: #FFF;
+  z-index: -1;
+}
+.blackBackground {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  padding: 0;
+  background-color: rgba(0,0,0,.6);
+  z-index: 8;
+}
+.dialogWrap{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  padding: 0;
+  z-index: 9;
+}
+.swiper-box .wx-swiper-dots.wx-swiper-dots-horizontal{
+  margin-bottom: 10rpx;
+}
+.swiper-box .wx-swiper-dot, .wx-swiper-dot-active{
+  width:40rpx;
+  display: inline-flex;
+  height: 10rpx;
+  margin-left: 16rpx;
+  justify-content:space-between;
+  border-radius: 30%;
+}
+.swiper-box .wx-swiper-dot::before{
+  content: '';
+  flex-grow: 1; 
+  border-radius: 30%;
+  background: rgba(212,212,212,1);
+}
+.swiper-box .wx-swiper-dot-active::before{
+  background:rgba(188,32,32,1);
+}
+.hideBackground{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  margin: auto;
+}
+button::after {
+  display: none;
+}
+text {
+  display: inline-block;
+}
 </style>
 
 <script>
@@ -14,7 +90,9 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/myorder',
-      'pages/orderdetails'
+      'pages/orderdetails',
+      'pages/address',
+      'pages/activity'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -31,6 +109,14 @@ export default class extends wepy.app {
         {
           pagePath: 'pages/orderdetails',
           text: '订单详情'
+        },
+        {
+          pagePath: 'pages/address',
+          text: '地址管理'
+        },
+        {
+          pagePath: 'pages/activity',
+          text: '精彩活动'
         }
       ],
       borderStyle: 'white',
@@ -42,7 +128,9 @@ export default class extends wepy.app {
   globalData = {
     openid: null,
     userData: {},
-    orderType: 'all'
+    orderType: 'all',
+    accessTokenData: {},
+    wxEncryptedDataDTO: {}
   }
 
   constructor () {
@@ -54,20 +142,31 @@ export default class extends wepy.app {
     let data = {}
     if (Fetch.getCookie()) {
       data = Fetch.getCookie()
-      // console.log(data)
+      console.log(0)
     } else {
       Fetch.setCookie(data)
+      console.log(-1)
     }
     if (JSON.stringify(data) !== '{}') {
       this.globalData.userData = data
+      console.log(0.1)
     } else {
+      console.log(0.2)
       let openid = await this.wxLogin()
+      console.log(0.21)
       this.globalData.openid = openid
+      console.log(0.22)
+      this.globalData.accessTokenData = await this.wxAccesstoken()
       let isAuth = await this.wxGetSetting()
       if (isAuth) {
         this.globalData.userData = await this.getUserInfo()
+        console.log(3)
         this.globalData.userData.openid = openid
-        let clientData = await LoginModel.fetchLogin(this.globalData.userData)
+        console.log(this.globalData.userData.openid)
+        this.globalData.userData.iv = this.globalData.wxEncryptedDataDTO.iv
+        this.globalData.userData.encryptedData = this.globalData.wxEncryptedDataDTO.encryptedData
+        console.log(this.globalData.userData)
+        let clientData = await this.upUserInfo(this.globalData.userData)
         Fetch.setCookie(clientData)
       }
     }
@@ -89,37 +188,54 @@ export default class extends wepy.app {
     })
   }
 
-  wxLogin() {
+/*   wxLogin() {
     return new Promise((resolve, reject) => {
+      let self = this
       wx.checkSession({
-        success(res) {
-          console.log('success')
+        success: function(res) {
+          console.log(2)
+          console.log(self.globalData)
         },
-        fail(res) {
+        fail: function(res) {
           wx.login({
-            success(res) {
-              var parm = {
+            success: function(res) {
+              var param = {
                 'appId': 'wxb847d92fa467e75c',
                 'code': res.code
               }
               wx.request({
-                url: 'http://www.简家之域.com/api/login',
-                data: JSON.stringify(parm),
+                url: 'http://www.jianjiazhiyu.com/api/user/login',
+                data: JSON.stringify(param),
                 header: {
                   'Content-Type': 'application/json'
                 },
                 method: 'POST',
                 success: function(res) {
-                  var openid = res.openid
+
+                  console.log(1)
+                  console.log(res)
+                  self.globalData.userData.param = param
+                  console.log(self.globalData.userData.param)
+                  var openId = res.data.data.openid
                   wx.request({
-                    url: 'http://www.简家之域.com/api/register/' + openid,
-                    data: JSON.stringify(openid),
+                    url: 'http://www.jianjiazhiyu.com/api/user/register/' + openId,
+                    data: JSON.stringify(openId),
                     header: {
                       'Content-Type': 'application/json'
                     },
                     method: 'POST',
                     success: function(res) {
-                      console.log('success')
+                      self.globalData.userData.openId = openId
+                      self.globalData.openid = openId
+                      console.log(self.globalData.userData.openId)
+                      var accessTokenData = {
+                        'accessToken': res.data.data.accessToken,
+                        'expiresIn': res.data.data.expiresIn,
+                        'refreshToken': res.data.data.refreshToken
+                      }
+                      self.globalData.accessTokenData = accessTokenData
+                      console.log(self.globalData.accessTokenData)
+                      console.log(self.globalData)
                     },
                     fail: function(res) {
                       console.log('fail')
@@ -131,12 +247,60 @@ export default class extends wepy.app {
                 }
               })
             },
-            fail(res) {
+            fail: function(res) {
               console.log('fail')
             }
           })
         }
       })
+    })
+  } */
+
+  wxLogin() {
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success: async (res) => {
+          if (res.code) {
+            // 发起网络请求
+            let data = await LoginModel.fetchLogin({
+              code: res.code,
+              appId: 'wxb847d92fa467e75c'
+            })
+            console.log(data)
+            resolve(data)
+          } else {
+            console.log('登录失败！' + res.errMsg)
+            resolve(null)
+          }
+        }
+      })
+    })
+  }
+
+  wxAccesstoken() {
+    let self = this
+    var openId = self.globalData.openid.openid
+    console.log(self.globalData.openid.openid)
+    wx.request({
+      url: 'http://www.jianjiazhiyu.com/api/user/register/' + openId,
+      data: JSON.stringify(openId),
+      header: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      success: function(res) {
+        console.log(1)
+        var accessTokenData = {
+          'accessToken': res.data.data.accessToken,
+          'expiresIn': res.data.data.expiresIn,
+          'refreshToken': res.data.data.refreshToken
+        }
+        self.globalData.accessTokenData = accessTokenData
+        console.log(self.globalData.accessTokenData)
+      },
+      fail: function(res) {
+        console.log('fail')
+      }
     })
   }
 
@@ -150,6 +314,13 @@ export default class extends wepy.app {
           if (self.userInfoReadyCallback) {
             self.userInfoReadyCallback(res)
           }
+          console.log(res)
+          self.globalData.wxEncryptedDataDTO = {
+            'encryptedData': res.encryptedData,
+            'iv': res.iv
+          }
+          console.log(self.globalData.wxEncryptedDataDTO)
+          console.log(res.userInfo)
           resolve(res.userInfo)
         },
         fail (res) {
@@ -157,6 +328,30 @@ export default class extends wepy.app {
           resolve({})
         }
       })
+    })
+  }
+
+  upUserInfo() {
+    let self = this
+    console.log(self.globalData.accessTokenData.accessToken)
+    let wxEncryptedDataDTO = {
+      'encryptedData': this.globalData.userData.encryptedData,
+      'iv': this.globalData.userData.iv
+    }
+    wx.request({
+      url: 'http://www.jianjiazhiyu.com/api/user/info',
+      data: JSON.stringify(wxEncryptedDataDTO),
+      header: {
+        'Content-Type': 'application/json',
+        'ACCESS-TOKEN': self.globalData.accessTokenData.accessToken
+      },
+      method: 'POST',
+      success: function() {
+        console.log(self.globalData.userData)
+      },
+      fail: function() {
+        console.log('fail')
+      }
     })
   }
 }

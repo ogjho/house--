@@ -1,0 +1,105 @@
+<style lang="css" scoped>
+</style>
+
+<template>
+  <view class="container">
+    <SegmentScrollMenu wx:if="modeType !== ''"
+      :itemsData.sync="segmentListData"
+      :selectedIndex.sync="selectedIndex"
+      @selectSegment.user="_selectSegment">
+    </SegmentScrollMenu>
+    <SegmentMenu wx:else
+      :itemsData.sync="segmentListData"
+      :selectedIndex.sync="selectedIndex"
+      @selectSegment.user="_selectSegment">
+    </SegmentMenu>
+    <Empty wx:if="{{itemsListData.length === 0}}" emptyText="该分类没有商品数据，去逛逛其他商品吧" emptyLink="index" emptyBtnText="去逛逛">
+    </Empty>
+    <view wx:else class="contentWrap">
+      <ProduceList 
+        :itemsData.sync="itemsListData">
+      </ProduceList>
+      <LoadingDone wx:if="{{end}}"></LoadingDone>
+    </view>
+    <Gototop wx:if="{{isShowTop}}" @goTop.user="_goTop" ></Gototop>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import SegmentScrollMenu from '../components/segmentScrollMenu'
+import ProduceList from '../components/produceList'
+import SegmentMenu from '../components/segmentMenu'
+import LoadingDone from '../components/loadingDone'
+import Empty from '../components/empty'
+import Gototop from '../components/gototop'
+import Navi from '../library/navi'
+import Fetch from '../library/fetch'
+import funMixin from '../mixins/fun'
+export default class ActivityList extends wepy.page {
+  config = {
+    navigationBarTitleText: '精彩活动'
+  }
+  components = {
+    ProduceList: ProduceList,
+    LoadingDone: LoadingDone,
+    SegmentScrollMenu: SegmentScrollMenu,
+    SegmentMenu: SegmentMenu,
+    Empty: Empty,
+    Gototop: Gototop
+  }
+
+  mixins = [funMixin]
+
+  data = {
+    haveData: false,  // 判断数据是否已经（第一次）拉取，主要用于判断用户授权后，是否重新拉取数据。自行查询onShow()函数的生命周期
+    bindClientId: 0,   // 初始化被绑定销售员的用户ID
+    modeType: null,  // 存储跳转页面信息，判断是从哪个页面跳转到此页面的
+    contentId: 0,
+    selectedIndex: 0,
+    end: false,   // 判断数据是否已经拉取到最后一页
+    pageIndex: 1, // 分页中的页码
+    total: 0,     // 分页列表数据的总数据数量，用于判断分页数据是否全部拉取完毕
+    segmentListData: [
+      {
+        key: 'scareBuying',
+        select: 0,
+        title: '抢购'
+      },
+      {
+        key: 'seckill',
+        select: 1,
+        title: '秒杀'
+      },
+      {
+        key: 'bargain',
+        select: 2,
+        title: '砍价'
+      }
+    ],
+    itemsListData: [
+      {
+        key: 0,
+        link: '',
+        coverImage: '../images/goods.jpg',
+        price: '10000.00',
+        originalPrice: '12000.00',
+        title: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+        activityTime: '18.11.11 10:00:00',
+        sales: '120'
+      },
+      {
+        key: 1,
+        link: '',
+        coverImage: '../images/goods.jpg',
+        price: '10000.00',
+        originalPrice: '12000.00',
+        title: 'HY-2906T油烟机 大吸力 加厚不锈钢 省时...',
+        activityTime: '18.11.11 10:00:00',
+        sales: '120'
+      }
+    ],
+    isShowTop: false  // 判断时候显示返回顶部按钮
+  }
+}
+</script>

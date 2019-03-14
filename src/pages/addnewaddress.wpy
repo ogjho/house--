@@ -1,0 +1,198 @@
+<style lang="css" scoped>
+.addressEditWrap{
+  width: 100%;
+  background-color: #FFF;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  margin: 20rpx auto;
+}
+.addressEditInputWrap{
+  height: 100rpx;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1rpx solid #F1F1F1;
+  box-sizing: border-box;
+}
+/* .addressEditInputWrap:last-child{
+  border: none;
+} */
+.addressEditTitle{
+  width: 140rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 28rpx;
+  color: #545454;
+  float: left;
+  margin-right: 30rpx;
+}
+.addressEditInputPlaceholder{
+  color: #999;
+}
+.addressEditInput{
+  font-size: 28rpx;
+  color: #545454;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color: #FFF;
+  margin: 20rpx 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.addressEditSetWrap{
+  width: 100%;
+  height: 100rpx;
+  background-color: #FFF;
+  padding: 25rpx 20rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 0;
+}
+.addressEditSetSelectIcon{
+  width: 50rpx;
+  height: 50rpx;
+  margin-right: 10rpx;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.addressEditSetText{
+  font-size: 28rpx;
+  color: #545454;
+  display: inline-block;
+  vertical-align: middle;
+}
+.addressEditBtn{
+  position: absolute;
+  bottom: 450rpx;
+  width: 500rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 36rpx;
+  z-index: 3;
+  background-color: #0097d3;
+  color: #FFF;
+  margin: 0 125rpx;
+  border-radius: 10rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="addressEditWrap">
+      <view class="addressEditInputWrap">
+        <text class="addressEditTitle">收货人：</text>
+        <input type="text" placeholder="请输入收货人姓名" placeholder-class="addressEditInputPlaceholder" class="addressEditInput" value="{{addressData.addressee}}" @input="addresseeChange" />
+      </view>
+      <view class="addressEditInputWrap">
+        <text class="addressEditTitle">手机号</text>
+        <input type="text" placeholder="请输入收货人联系电话" placeholder-class="addressEditInputPlaceholder" class="addressEditInput" value="{{addressData.phoneNumber}}" @input="phoneNumberChange" />
+      </view>
+      <view class="addressEditInputWrap">
+        <text class="addressEditTitle">详细地址：</text>
+        <input type="text" placeholder="请输入收货人详细地址" placeholder-class="addressEditInputPlaceholder" class="addressEditInput" value="{{addressData.address}}" @input="addressChange" />
+      </view>
+    </view>
+    <view class="addressEditSetWrap" @tap="selectDefault({{addressData.status}})">
+      <image class="addressEditSetSelectIcon" src="{{addressData.status === 2 ? '../images/tickOn.png': '../images/tickOff.png'}}"></image>
+      <text class="addressEditSetText">设置为默认收货地址</text>
+    </view>
+    <view @tap="saveAddressData" class="addressEditBtn">保 存</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Navi from '../library/navi'
+import AddressModel from '../models/addressModel'
+import Fetch from '../library/fetch'
+export default class Address extends wepy.page {
+  config = {
+    navigationBarTitleText: '添加地址'
+  }
+  components = {
+  }
+
+  data = {
+    contentId: 0,
+    clientData: {},
+    addressData: {
+      clientId: 0,
+      addressee: '',
+      phoneNumber: '',
+      address: '',
+      status: 1
+    }
+  }
+
+  methods = {
+    selectDefault: function(status) {
+      this.addressData.status = status === 2 ? 1 : 2
+    },
+    addresseeChange: function(event) {
+      // console.log(event.detail)
+      this.addressData.addressee = event.detail.value
+    },
+    phoneNumberChange: function(event) {
+      // console.log(event.detail)
+      this.addressData.phoneNumber = event.detail.value
+    },
+    addressChange: function(event) {
+      // console.log(event.detail)
+      this.addressData.address = event.detail.value
+    },
+    saveAddressData: async function() {
+      if (this.contentId) {
+        await AddressModel.addressMod(this.addressData)
+      } else {
+        await AddressModel.addressAdd(this.addressData)
+      }
+      this.addressData = {
+        clientId: 0,
+        addressee: '',
+        phoneNumber: '',
+        address: '',
+        status: 1
+      }
+      this.$apply()
+      await this.messageDialog('保存成功')
+      setTimeout(function() {
+        Navi.back()
+      }, 2000)
+    }
+  }
+  onLoad (options) {
+    this.clientData = Fetch.getCookie()
+    this.addressData.clientId = this.clientData.clientId
+    this.contentId = options.contentId ? options.contentId : 0
+    this.$apply()
+  }
+  async onReady() {
+    if (this.contentId) {
+      await this.fetchData()
+    }
+  }
+  async fetchData () {
+    let data = await AddressModel.fetchSingleAddress({
+      contentId: this.contentId
+    })
+    this.addressData = data
+    this.$apply()
+  }
+  messageDialog (text, icon) {
+    return new Promise((resolve, reject) => {
+      wx.showToast({
+        title: text || '提示',
+        icon: icon || 'success',
+        duration: 2000,
+        mask: true,
+        complete: function(res) {
+          resolve(true)
+        }
+      })
+    })
+  }
+}
+</script>

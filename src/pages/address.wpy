@@ -1,0 +1,169 @@
+<style lang="css" scoped>
+  .address{
+    margin-top: 20rpx;
+    height:140rpx;
+    background-color: #FFF;
+    margin-bottom:20rpx;
+  }
+  .address_img{
+    width:50rpx;
+    height:50rpx;
+    margin:45rpx 20rpx 45rpx 22rpx;
+    float: left;
+  }
+  .address_content{
+    font-size: 26rpx;
+    color:#595959;
+    display: inline-block;
+    margin-top: 28rpx;
+  }
+  .address_peoplecontent{
+    margin-bottom: 10rpx;
+  }
+  .address_peoplephone{
+    margin-left: 20rpx;
+  }
+  .address_details{
+    font-size: 24rpx;
+  }
+  .addressEditSetSelectIcon{
+    width: 50rpx;
+    height: 50rpx;
+    margin-right: 10rpx;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+  }
+  .addressEditSetWrap{
+    background-color: #FFF;
+    padding: 10rpx 10rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-size: 0;
+    display: inline-block;
+  }
+  .addressEditSetText{
+    font-size: 28rpx;
+    color: #545454;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .addressManageEditWrap{
+    width: 750rpx;
+    height: 88rpx;
+    margin: 20rpx auto;
+    box-sizing: border-box;
+    background-color: #FFF;
+    overflow: hidden;
+    position: relative;
+    color: #0097d3;
+    font-size: 32rpx;
+    line-height: 88rpx;
+    text-align: center;
+    border-radius: 8rpx;
+  }
+  .addressAmend{
+    margin-left: 40rpx;
+  }
+  .addressAmend,.addressDel{
+    display: inline-block;
+    padding:0 10rpx;   
+  }
+  .addressDel{
+    margin-left: 20rpx;
+  }
+</style>
+
+<template>
+  <view @tap="goLink('addnewaddress')" class="addressManageEditWrap">
+    ＋添加收货地址
+  </view>
+  <view class="address" wx:for="{{addressData}}" wx:for-item="item" wx:key="item.id" wx:for-index="index">
+    <image class="address_img" src="{{address_img}}"></image>
+    <view class="address_content">
+      <view class="address_peoplecontent">
+        <view class="address_peoplename dis">{{item.peoplename}}</view>
+        <view class="address_peoplephone dis">{{item.peoplephone}}</view>
+      </view>
+      <view class="address_details">{{item.address_details}}</view>
+    </view>
+    <view class="addressEditSetWrap" @tap="selectDefault({{addressData.status}})">
+      <image class="addressEditSetSelectIcon" src="{{addressData.status === 2 ? '../images/tickOn.png': '../images/tickOff.png'}}"></image>
+      <text class="addressEditSetText">设置为默认收货地址</text>
+      <view class="addressAmend" @tap="selectDefault({{addressData.status}})">
+        <text class="addressEditSetText">编辑</text>
+      </view>
+      <view class="addressDel" @tap="selectDefault({{addressData.status}})">
+        <text class="addressEditSetText">删除</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Navi from '../library/navi'
+
+export default class address extends wepy.page {
+  config = {
+    navigationBarTitleText: '地址管理'
+  }
+  data = {
+    clientData: {},
+    address_img: '../images/place.png',
+    addressData: [
+      {
+        id: '0',
+        peoplename: '李先生',
+        peoplephone: '12312312312',
+        address_details: '广东省佛山市顺德区容桂街道顺德科技创新中心4座1101'
+      },
+      {
+        id: '1',
+        peoplename: '李先生',
+        peoplephone: '12312312312',
+        address_details: '广东省佛山市顺德区容桂街道顺德科技创新中心4座1101'
+      },
+      {
+        id: '2',
+        peoplename: '李先生',
+        peoplephone: '12312312312',
+        address_details: '广东省佛山市顺德区容桂街道顺德科技创新中心4座1101'
+      },
+      {
+        id: '3',
+        peoplename: '李先生',
+        peoplephone: '12312312312',
+        address_details: '广东省佛山市顺德区容桂街道顺德科技创新中心4座1101'
+      }
+    ]
+  }
+  methods = {
+    goLink(link) {
+      Navi.go(link)
+    },
+    selectDefault: function(status) {
+      this.addressData.status = status === 2 ? 1 : 2
+    }
+  }
+  async f(data) {
+    console.log(1)
+    let promise = new Promise((resolve, reject) => {
+      setTimeout(() => resolve('done!'), 1000)
+      console.log(resolve)
+    })
+    console.log(3)
+    let result = await promise
+    data.data.map(function(single) {
+      console.log(single)
+    })
+    console.log(4)
+    console.log(result)
+    console.log(5)
+  }
+  async onLoad () {
+    await this.f()
+  }
+}
+
+</script>
